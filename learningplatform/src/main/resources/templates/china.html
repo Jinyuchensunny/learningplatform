@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>地图</title>
+    <style>
+        html body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        #provinceInfo {
+            position: absolute;
+            z-index: 2;
+            background: white;
+            padding: 10px;
+            visibility: hidden;
+        }
+
+        #personInfo {
+            position: absolute;
+            z-index: 2;
+            background: white;
+            padding: 10px;
+            visibility: hidden;
+        }
+        .box1{
+            position: absolute;
+            padding: 10px 15px;
+            background-color: rgba(0,0,0,0.8);
+            color:#fff;
+            border:1px solid #3cc47c;
+        }
+        .box2{
+            position: absolute;
+            color:#fff;
+            background-color: rgba(0, 127, 127, 0.447);
+            box-shadow: 0px 0px 12px rgba(0,255,255,0.5);
+            border: 1px solid rgba(127,255,255,0.25);
+        }
+        .box2 .ys-con{
+            font-weight: bold;
+            color: rgba(255,255,255,0.75);
+            text-shadow: 0 0 10px rgba(0,255,255,0.95);
+        }
+    </style>
+    <script src="js/three.js"></script>
+    <script src="js/OrbitControls.js"></script>
+    <script src="js/d3-array.v1.min.js"></script>
+    <script src="js/d3-geo.v1.min.js"></script>
+    <link rel="stylesheet" href="js/ys.min.css">
+    <script src="js/CSS2DRenderer.js"></script>
+    <script src="js/ysThree.js"></script>
+    <script src="js/tween.min.js"></script>
+</head>
+
+<body>
+<div id="provinceInfo"></div>
+<div id="personInfo"></div>
+<div id="box1" hidden>
+    <div class="ys-block">
+        <div class="ys-tit-sm" id="headbox1"><span>标题</span></div>
+        <div class="ys-con" id="bodybox1">
+            修改前
+        </div>
+    </div>
+</div>
+</body>
+
+<script th:inline="javascript">
+
+
+    class lineMap {
+
+
+        constructor(container) {
+            this.container = container ? container : document.body;
+        }
+
+        scatterCircle(r, init, ring, color, speed) {
+            var uniform = {
+                u_color: { value: color },
+                u_r: { value: init },
+                u_ring: {
+                    value: ring,
+                },
+            };
+
+            var vs = `
+            varying vec3 vPosition;
+            void main(){
+			vPosition=position;
+			gl_Position	= projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+		}
+	`;
+            var fs = `
+		varying vec3 vPosition;
+		uniform vec3 u_color;
+		uniform float u_r;
+		uniform float u_ring;
+
+		void main(){
+			float pct=distance(vec2(vPosition.x,vPosition.y),vec2(0.0));
+			if(pct>u_r || pct<(u_r-u_ring)){
+				gl_FragColor = vec4(1.0,0.0,0.0,0);
+			}else{
+				float dis=(pct-(u_r-u_ring))/(u_r-u_ring);
+				gl_FragColor = vec4(u_color,dis);
+			}
+		}
+	`;
+            const geometry = new THREE.CircleGeometry(r, 120);
+            var material = new THREE.ShaderMaterial({
+                vertexShader: vs,
+                fragmentShader: fs,
+                side: THREE.DoubleSide,
+                uniforms: uniform,
+                transparent: true,
+                depthWrite: false,
+            });
+            const circle = new THREE.Mesh(geometry, material);
+
+            function render() {
+                uniform.u_r.value += speed || 0.1;
+                if (uniform.u_r.value >= r) {
+                    uniform.u_r.value = init;
+                }
+                requestAnimationFrame(render);
+            }
+            render();
+
+            return circle;
+        }
+        init() {
+            this.clickObjects = [];
+            this.personInfo=document.getElementById('personInfo');
+            this.provinceInfo = document.getElementById('provinceInfo');
+            // 渲染器
+            this.renderer = new THREE.WebGLRenderer();
+            this.renderer.setSize(window.innerWidth, window.innerHeight);
+            this.container.appendChild(this.renderer.domElement);
+
+            this.labelRenderer = new THREE.CSS2DRenderer(); //新建CSS2DRenderer
+            this.labelRenderer.setSize(window.innerWidth, window.innerHeight);
+            this.labelRenderer.domElement.style.position = 'absolute';
+            this.labelRenderer.domElement.style.top = '-16px';
+            this.labelRenderer.domElement.style.left = '0px';
+// //设置.pointerEvents=none，以免模型标签HTML元素遮挡鼠标选择场景模型
+            this.labelRenderer.domElement.style.pointerEvents = 'none';
+            this.container.appendChild(this.labelRenderer.domElement);
+            // 场景
+            this.scene = new THREE.Scene();
+
+
+
+
+            //给场景添加天空盒子纹理
+            var cubeTextureLoader = new THREE.CubeTextureLoader();
+            cubeTextureLoader.setPath( 'image/' );
+            //六张图片分别是朝前的（posz）、朝后的（negz）、朝上的（posy）、朝下的（negy）、朝右的（posx）和朝左的（negx）。
+            //右左 上下 后前
+            var cubeTexture = cubeTextureLoader.load( [
+                'px.jpg', 'nx.jpg',
+                'py.jpg', 'ny.jpg',
+                'pz.jpg', 'nz.jpg'
+            ] );
+
+            this.scene.background = cubeTexture;
+
+            // 相机 透视相机
+            this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+            this.camera.position.set(0, -70, 150);
+            this.camera.lookAt(0, 0, 0);
+
+            this.setController(); // 设置控制
+
+            this.setLight(); // 设置灯光
+
+            this.setRaycaster();
+
+            this.animate();
+
+            // this.loadFont(); // 加载字体
+            this.addPeople();
+
+            this.loadMapData();
+
+            this.setResize(); // 绑定浏览器缩放事件
+
+            var tween = new TWEEN.Tween(this.camera.position)
+                .to({z: 50,y:-30},10000)
+                .start();
+
+
+        }
+
+        addInformation(id,str){
+            this.colMap.set(id,str);
+        }
+
+        addPeople() {
+            this.colMap=new Map();
+            var colleages = [[${colleages}]];
+            //浙江 11,-13  118,27
+            for(var i=0;i<colleages.length;i++){
+                var x=11+(colleages[i].longitude-118)*0.8;
+                var y=-13+(colleages[i].latitude-27);
+                var z=5;
+                this.makePerson(x, y, z, colleages[i].colleage_name, colleages[i].id);
+                var str="学院名称：（"+colleages[i].colleage_name+"）   经纬度：（"+colleages[i].longitude+"，"+colleages[i].latitude+"）     学院简介：（"+colleages[i].detail+"）";
+                this.addInformation(colleages[i].id,str);
+
+                let circle = this.scatterCircle(1, 0.1, 0.3, new THREE.Vector3(0, 1, 1), 0.02);
+                circle.position.set(x*2, y, z);//第一个是左右，第二个是上下，第三个是立体上下
+                this.scene.add(circle);
+
+
+                let personDiv = document.createElement("box");
+                //document.getElementById("bodybox1").innerText=colleages[i].colleage_name;
+                personDiv.className = "box2";
+                personDiv.textContent=colleages[i].colleage_name
+                //moonDiv.style.marginTop = "-1em";
+                let personLabel = new THREE.CSS2DObject(personDiv);
+                personLabel.position.set(0,0,7);
+                //this.scene.add(personLabel);
+                circle.add(personLabel);
+
+
+                let p1 =  new THREE.Vector3(0,0,2)
+                let p2 =  new THREE.Vector3(0,0,7)
+                let lineGeo = new THREE.Geometry()
+                lineGeo.vertices.push(p1,p2)
+                lineGeo.colors.push(new THREE.Color("red"),new THREE.Color("yellow"))
+                let line = new  THREE.Line(lineGeo,new THREE.LineBasicMaterial({
+                    linewidth:10,//window无效
+                    vertexColors: true,//使用顶点渐变着色
+                }))
+                circle.add(line)
+
+
+                /*  let circle1 = this.scatterCircle(1, 0.1, 0.3, new THREE.Vector3(0, 1, 1), 0.02);
+                  circle1.position.set(22, -13, 5);//22-13 5
+                  this.scene.add(circle1);
+                  let circle2 = this.scatterCircle(1, 0.1, 0.3, new THREE.Vector3(0, 1, 1), 0.02);
+                  circle2.position.set(19, -1, 5);
+                  this.scene.add(circle2);
+                  let circle3 = this.scatterCircle(1, 0.1, 0.3, new THREE.Vector3(0, 1, 1), 0.02);
+                  circle3.position.set(6, -10, 5);
+                  this.scene.add(circle3);*/
+            }
+            /*
+                        this.makePerson(11, -13, 5, colleages[0].colleage_name, colleages[0].id);
+                        var str0="学院名称："+colleages[0].colleage_name+"   经度："+colleages[0].longitude+"   纬度："+colleages[0].latitude;
+                        this.addInformation(colleages[0].id,str0);
+
+                        this.makePerson(9, 1, 5, colleages[1].colleage_name, colleages[1].id);
+                        var str0="学院名称："+colleages[1].colleage_name+"   经度："+colleages[1].longitude+"   纬度："+colleages[1].latitude;
+                        this.addInformation(colleages[1].id,str0);
+
+                        this.makePerson(0, -9, 5, colleages[2].colleage_name, colleages[2].id);
+                        var str0="学院名称："+colleages[2].colleage_name+"   经度："+colleages[2].longitude+"   纬度："+colleages[2].latitude;
+                        this.addInformation(colleages[2].id,str0);
+            */
+            // this.makePerson(11,-13,5,"浙江大学",1);
+            // this.makePerson(9,1,5,"北京大学",2);
+            // this.makePerson(0,-9,5,"四川大学",3);
+        }
+
+        makePerson(x, y, z, name, id) {
+
+            //const gLabel = new THREE.Group();
+            //const fontsize=2;
+
+            /*
+            const texture = new THREE.CanvasTexture(canvas);
+            const fontMesh = new THREE.Sprite(
+                    new THREE.SpriteMaterial({
+                      map: texture
+                    })
+            )
+            fontMesh.scale.x = fontsize*3;
+            fontMesh.scale.y = fontsize*1.2;
+            //var lblPos = this.getPosition(_labelData[i].attributes.x + 90, _labelData[i].attributes.y, 35);
+            fontMesh.position.set(x,y,z);
+            gLabel.add(fontMesh);
+      // 获取average函数
+
+      */
+            const canvas = this.makeLabelCanvas(150, 50, name);
+            const bodyRadiusTop = .4;
+            const bodyRadiusBottom = .2;
+            const bodyHeight = 2;
+            const bodyRadialSegments = 6;
+            const bodyGeometry = new THREE.CylinderGeometry(
+                bodyRadiusTop, bodyRadiusBottom, bodyHeight, bodyRadialSegments);
+
+            const headRadius = bodyRadiusTop * 0.8;
+            const headLonSegments = 12;
+            const headLatSegments = 5;
+            const headGeometry = new THREE.SphereGeometry(
+                headRadius, headLonSegments, headLatSegments);
+
+            const labelGeometry = new THREE.PlaneGeometry(1, 1);
+            const texture = new THREE.CanvasTexture(canvas);
+            const labelMaterial = new THREE.MeshBasicMaterial({
+                map: texture,
+                side: THREE.DoubleSide,
+                transparent: true,
+            });
+            const bodyMaterial = new THREE.MeshPhongMaterial({
+                color: "purple",
+                flatShading: true,
+            });
+
+            // bodyGeometry.translate(0,12.5,0);
+            //headGeometry.translate(0,12.5,0);
+            //labelGeometry.translate(0,12.5,0);
+
+            //bodyGeometry.rotateX(Math.PI /2);
+            //headGeometry.rotateX(Math.PI /2);
+            //labelGeometry.rotateX(Math.PI /2);
+
+
+            const root = new THREE.Object3D();
+            root.position.x = x;
+
+            const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+            body.rotation.x = Math.PI / 2;
+            root.add(body);
+            body.position.x = x;
+            body.position.y = y;
+            body.position.z = z;
+
+            const head = new THREE.Mesh(headGeometry, bodyMaterial);
+            //head.rotation.x = Math.PI/2;
+            root.add(head);
+            head.position.x = x;
+            head.position.y = y;
+            head.position.z = z + 1.5;
+            //head.position.y = bodyHeight + headRadius * 1.1;
+
+            const label = new THREE.Mesh(labelGeometry, labelMaterial);
+            label.rotation.x = Math.PI / 2;
+            root.add(label);
+            label.position.x = x;
+            label.position.y = y - 0.45;
+            label.position.z = z + 0.5;
+
+            // if units are meters then 0.01 here makes size
+            // of the label into centimeters.
+            const labelBaseScale = 0.01;
+            label.scale.x = canvas.width * labelBaseScale;
+            label.scale.y = canvas.height * labelBaseScale;
+
+
+            //this.clickObjects.push(root);
+            head.name = id;
+            body.name = id;
+            this.clickObjects.push(head);
+            this.clickObjects.push(body);
+
+            this.scene.add(root);
+            //this.scene.add(gLabel);
+
+        }
+
+        //const ctx = document.createElement('canvas').getContext('2d');
+        makeLabelCanvas(baseWidth, size, name) {
+            const ctx = document.createElement('canvas').getContext('2d');
+            const borderSize = 2;
+            const font = `${size}px bold sans-serif`;
+            ctx.font = font;
+            // measure how long the name will be
+            const textWidth = ctx.measureText(name).width;
+
+            const doubleBorderSize = borderSize * 2;
+            const width = baseWidth + doubleBorderSize;
+            const height = size + doubleBorderSize;
+            ctx.canvas.width = width;
+            ctx.canvas.height = height;
+
+            // need to set font again after resizing canvas
+            ctx.font = font;
+            ctx.textBaseline = 'middle';
+            ctx.textAlign = 'center';
+
+            ctx.fillStyle = 'blue';
+            ctx.fillRect(0, 0, width, height);
+
+            // scale to fit but don't stretch
+            const scaleFactor = Math.min(1, baseWidth / textWidth);
+            ctx.translate(width / 2, height / 2);
+            ctx.scale(scaleFactor, 1);
+            ctx.fillStyle = 'white';
+            ctx.fillText(name, 0, 0);
+
+            return ctx.canvas;
+        }
+
+
+        setResize() {
+            let _this = this;
+            window.addEventListener('resize', function () {
+                _this.renderer.setSize(window.innerWidth, window.innerHeight);
+
+            })
+        }
+
+        loadMapData() {
+            let _this = this;
+
+            // 加载json文件
+            let loader = new THREE.FileLoader();
+            loader.load('json/china.json', function (data) {
+                let jsonData = JSON.parse(data);
+                _this.initMap(jsonData);
+
+
+            });
+        }
+
+        loadFont() { //加载中文字体
+            var loader = new THREE.FontLoader();
+            var _this = this;
+            loader.load('C:/Users/razer/Desktop/china-3d-master/fonts/chinese.json', function (response) {
+                _this.font = response;
+                _this.loadMapData();
+            });
+
+        }
+
+        createText(text, position) {
+            var shapes = this.font.generateShapes(text, 1);
+
+            var geometry = new THREE.ShapeBufferGeometry(shapes);
+
+            var material = new THREE.MeshBasicMaterial();
+
+            var textMesh = new THREE.Mesh(geometry, material);
+            textMesh.position.set(position.x, position.y, position.z);
+
+            this.scene.add(textMesh);
+        }
+
+        initMap(chinaJson) {
+            // 建一个空对象存放对象
+            this.map = new THREE.Object3D();
+
+            let _this = this;
+
+            // 墨卡托投影转换
+            const projection = d3.geoMercator().center([104.0, 37.5]).scale(80).translate([0, 0]);
+
+            chinaJson.features.forEach(elem => {
+                // 定一个省份3D对象
+                const province = new THREE.Object3D();
+                // 每个的 坐标 数组
+                const coordinates = elem.geometry.coordinates;
+                // 循环坐标数组
+                coordinates.forEach(multiPolygon => {
+
+                    multiPolygon.forEach(polygon => {
+                        const shape = new THREE.Shape();
+                        const lineMaterial = new THREE.LineBasicMaterial({
+                            color: 'white'
+                        });
+                        const lineGeometry = new THREE.Geometry();
+
+                        for (let i = 0; i < polygon.length; i++) {
+                            const [x, y] = projection(polygon[i]);
+                            if (i === 0) {
+                                shape.moveTo(x, -y);
+                            }
+                            shape.lineTo(x, -y);
+                            lineGeometry.vertices.push(new THREE.Vector3(x, -y, 4.01));
+                        }
+
+                        const extrudeSettings = {
+                            depth: 4,
+                            bevelEnabled: false
+                        };
+
+                        const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+                        const material = new THREE.MeshBasicMaterial({
+                            color: '#02A1E2',
+                            transparent: true,
+                            opacity: 0.6
+                        });
+                        const material1 = new THREE.MeshBasicMaterial({
+                            color: '#3480C4',
+                            transparent: true,
+                            opacity: 0.5
+                        });
+                        //const material = new THREE.MeshBasicMaterial({ color: '#dedede', transparent: false, opacity: 0.6 });
+                        //const material1 = new THREE.MeshBasicMaterial({ color: '#dedede', transparent: false, opacity: 0.5 });
+                        const mesh = new THREE.Mesh(geometry, [material, material1]);
+                        const line = new THREE.Line(lineGeometry, lineMaterial);
+                        province.add(mesh);
+                        province.add(line)
+
+                    })
+
+                })
+
+                // 将geo的属性放到省份模型中
+                province.properties = elem.properties;
+                if (elem.properties.contorid) {
+                    const [x, y] = projection(elem.properties.contorid);
+                    province.properties._centroid = [x, y];
+                }
+
+                _this.map.add(province);
+
+            })
+
+
+            this.scene.add(this.map);
+        }
+
+
+        setRaycaster() {
+            this.raycaster = new THREE.Raycaster();
+            this.mouse = new THREE.Vector2();
+            this.eventOffset = {};
+            var _this = this;
+
+
+            function onMouseClick(event) {
+                document.body.addEventListener('mousedown', onDocumentMouseDown, false);
+
+                function onDocumentMouseDown(event) {
+                    event.preventDefault();
+                    _this.mouse.x = (event.clientX / _this.renderer.domElement.clientWidth) * 2 - 1;
+                    _this.mouse.y = -(event.clientY / _this.renderer.domElement.clientHeight) * 2 + 1;
+
+                    _this.raycaster.setFromCamera(_this.mouse, _this.camera);
+
+                    //总结一下，这里必须装网格，mesh，装入组是没有效果的
+                    //所以我们将所有的盒子的网格放入对象就可以了
+                    // 需要被监听的对象要存储在clickObjects中。
+                    var intersects = _this.raycaster.intersectObjects(_this.clickObjects);
+                    console.log("click");
+                    // console.log(intersects)
+                    if (intersects.length > 0) {
+
+                        // 在这里填写点击代码
+                        console.log("dianji");
+                        console.log(intersects[0].object.name);
+                        var href1 = "/studio?colleageId=";
+                        var href2 = intersects[0].object.name;
+                        var userId = [[${userId}]];
+                        var href3 = href1 + href2 + "&userId=" + userId.toString();
+                        window.location.href = href3;
+
+                        //showDetailPage(intersects[0].object.name);
+
+                    }
+
+                }
+
+            }
+
+            function onMouseMove(event) {
+
+                // calculate mouse position in normalized device coordinates
+                // (-1 to +1) for both components
+
+                _this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+                _this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+                _this.eventOffset.x = event.clientX;
+                _this.eventOffset.y = event.clientY;
+                this.provinceInfo.style.left = _this.eventOffset.x + 2 + 'px';
+                this.provinceInfo.style.top = _this.eventOffset.y + 2 + 'px';
+
+                this.personInfo.style.left = _this.eventOffset.x + 2 + 'px';
+                this.personInfo.style.top = _this.eventOffset.y + 2 + 'px';
+            }
+
+            /*
+                  function onMouseClick( event ) {
+
+                   ;
+                    //通过鼠标点击的位置计算出raycaster所需要的点的位置，以屏幕中心为原点，值的范围为-1到1.
+
+                    _this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+                    _this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+                    // 通过鼠标点的位置和当前相机的矩阵计算出raycaster
+                    _this.raycaster.setFromCamera( _this.mouse,this.camera );
+                    //找到场景中所有外部模型
+                    var scensObjs = [];
+                    scene.children.forEach(child => {
+                      for (var i = 0; i < child.children.length; i++) {
+                        var obj=child.children[i];
+                        scensObjs.push(obj);
+                      }
+                    });
+                    // 获取raycaster直线和所有模型相交的数组集合
+                    var intersects = _this.raycaster.intersectObjects(scensObjs);
+                    var objs = [];
+                    console.log(intersects);
+
+                    //将所有的相交的模型的颜色设置为红色，如果只需要将第一个触发事件，那就数组的第一个模型改变颜色即可
+
+
+                    for (var i = 0; i < intersects.length; i++) {
+                      var intersect = intersects[i];
+                      if (intersect.object instanceof THREE.Mesh) {
+                        var obj = intersect.object.parent;
+                        //把距离加到模型用户数据里面，方便后面排序
+                        obj.userData.distance = intersect.distance;
+                        objs.push(obj);
+                      }
+
+                    }
+                    objs = objs.sort(function (a, b) {
+                      return a.userData.distance - b.userData.distance;
+
+                    });
+
+                  }*/
+
+
+            window.addEventListener('mousemove', onMouseMove, false);
+            window.addEventListener('click', onMouseClick, false);
+
+        }
+
+        setLight() {
+            let ambientLight = new THREE.AmbientLight(0xffffff); // 环境光
+            this.scene.add(ambientLight);
+        }
+
+        setController() {
+            this.controller = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+            /* this.controller.enablePan = false; // 禁止右键拖拽
+
+            this.controller.enableZoom = true; // false-禁止右键缩放
+
+            this.controller.maxDistance = 200; // 最大缩放 适用于 PerspectiveCamera
+            this.controller.minDistance = 50; // 最大缩放
+
+            this.controller.enableRotate = true; // false-禁止旋转 */
+
+            /* this.controller.minZoom = 0.5; // 最小缩放 适用于OrthographicCamera
+            this.controller.maxZoom = 2; // 最大缩放 */
+
+        }
+
+        animate() {
+            TWEEN.update();
+            requestAnimationFrame(this.animate.bind(this));
+            // this.cube.rotation.x += 0.05;
+            // this.cube.rotation.y += 0.05;
+            this.raycaster.setFromCamera(this.mouse, this.camera);
+
+            // calculate objects intersecting the picking ray
+            var intersects = this.raycaster.intersectObjects(this.scene.children, true);
+            if (this.activeInstersect && this.activeInstersect.length > 0) { // 将上一次选中的恢复颜色
+                this.activeInstersect.forEach(element => {
+                    element.object.material[0].color.set('#02A1E2');
+                    element.object.material[1].color.set('#3480C4');
+                });
+            }
+
+            this.activeInstersect = []; // 设置为空
+            this.activeColleage=[];
+
+            for (var i = 0; i < intersects.length; i++) {
+                if(intersects[i].object.name) this.activeColleage.push(intersects[i]);
+                if(intersects[i].object.material && intersects[i].object.material.length === 2) {
+                    this.activeInstersect.push(intersects[i]);
+                    intersects[i].object.material[0].color.set(0xff0000);
+                    intersects[i].object.material[1].color.set(0xff0000);
+                    break; // 只取第一个
+                }
+
+            }
+            //this.createProvinceInfo();
+            this.createPersonInfo();
+
+            this.renderer.render(this.scene, this.camera);
+            this.labelRenderer.render(this.scene, this.camera)
+        }
+
+        createProvinceInfo() { // 显示省份的信息
+            if (this.activeInstersect.length !== 0 && this.activeInstersect[0].object.parent.properties.name) {
+                var properties = this.activeInstersect[0].object.parent.properties;
+
+                this.provinceInfo.textContent = properties.name;
+
+                this.provinceInfo.style.visibility = 'visible';
+            } else {
+                this.provinceInfo.style.visibility = 'hidden';
+            }
+
+
+        }
+
+        createPersonInfo() { // 显示学院的信息
+            if (this.activeColleage.length !== 0 && this.activeColleage[0].object.name) {
+                var id=this.activeColleage[0].object.name;
+                var str=this.colMap.get(id);
+                this.personInfo.textContent =str;
+
+                this.personInfo.style.visibility = 'visible';
+            } else {
+                this.personInfo.style.visibility = 'hidden';
+            }
+
+
+        }
+    }
+
+</script>
+<script>
+    let line = new lineMap();
+    line.init();
+</script>
+
+</html>

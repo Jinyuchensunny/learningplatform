@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="457a0cf9-1322-4ab8-b72b-fa8fd386c188" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeStyleSettingsInfer">
+    <option name="done" value="true" />
+  </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand />
+    <select />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="1" />
+  </component>
+  <component name="ProjectId" id="1rFAILHjaRK7ouPGodCfNICNV0l" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DatabaseDriversLRU" value="mysql" />
+    <property name="ExpandSpringBootJavaOptionsPanel" value="true" />
+    <property name="RequestMappingsPanelOrder0" value="0" />
+    <property name="RequestMappingsPanelOrder1" value="1" />
+    <property name="RequestMappingsPanelWidth0" value="75" />
+    <property name="RequestMappingsPanelWidth1" value="75" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.19784173" />
+    <property name="settings.editor.selected.configurable" value="MavenSettings" />
+    <property name="two.files.diff.last.used.folder" value="$PROJECT_DIR$/addcolleage/src/main/resources/static/lib.zip" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="H:\learningplatform\learningplatform\src\main\resources\templates" />
+      <recent name="C:\Users\Administrator\Desktop\learningplatform\learningplatform\src\main\resources\templates" />
+      <recent name="C:\Users\Administrator\Desktop\learningplatform\learningplatform\src\main\resources\static\js" />
+      <recent name="C:\Users\Administrator\Desktop\learningplatform\learningplatform\src\main\resources\static\js1" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.learningplatform.controller" />
+      <recent name="com.learningplatform" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="configurationTypes">
+      <set>
+        <option value="SpringBootApplicationConfigurationType" />
+      </set>
+    </option>
+  </component>
+  <component name="RunManager" selected="Spring Boot.LearningplatformApplication">
+    <configuration name="AddcolleageApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="addcolleage" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.addcolleage.AddcolleageApplication" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SHORTEN_COMMAND_LINE" value="MANIFEST" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AddstudioApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="addstudio" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.addstudio.AddstudioApplication" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SHORTEN_COMMAND_LINE" value="MANIFEST" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AllbookApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="allbook" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.allbook.AllbookApplication" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SHORTEN_COMMAND_LINE" value="MANIFEST" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AllcolleageApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="allcolleage" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.allcolleage.AllcolleageApplication" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SHORTEN_COMMAND_LINE" value="MANIFEST" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AllexerciseApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="allexercise" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.allexercise.AllexerciseApplication" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SHORTEN_COMMAND_LINE" value="MANIFEST" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AllstudioApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="allstudio" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.allstudio.AllstudioApplication" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SHORTEN_COMMAND_LINE" value="MANIFEST" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AlltaskApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="alltask" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.alltask.AlltaskApplication" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SHORTEN_COMMAND_LINE" value="MANIFEST" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AlluserApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="alluser" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.alluser.AlluserApplication" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SHORTEN_COMMAND_LINE" value="MANIFEST" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AllusersApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="allusers" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.allusers.AllusersApplication" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SHORTEN_COMMAND_LINE" value="MANIFEST" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AllvedioApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="allvedio" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.allvedio.AllvedioApplication" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SHORTEN_COMMAND_LINE" value="MANIFEST" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="DelstudentApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="delstudent" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.delstudent.DelstudentApplication" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SHORTEN_COMMAND_LINE" value="MANIFEST" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="LearningplatformApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="learningplatform" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.learningplatform.LearningplatformApplication" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SHORTEN_COMMAND_LINE" value="MANIFEST" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PublishexerciseApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="publishexercise" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.publishexercise.PublishexerciseApplication" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SHORTEN_COMMAND_LINE" value="MANIFEST" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PublishtaskApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="publishtask" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.publishtask.PublishtaskApplication" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SHORTEN_COMMAND_LINE" value="MANIFEST" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UpdatestuinfoApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="updatestuinfo" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.updatestuinfo.UpdatestuinfoApplication" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SHORTEN_COMMAND_LINE" value="MANIFEST" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UpdateuserperApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="updateuserper" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.updateuserper.UpdateuserperApplication" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SHORTEN_COMMAND_LINE" value="MANIFEST" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Spring Boot.AddcolleageApplication" />
+      <item itemvalue="Spring Boot.AddstudioApplication" />
+      <item itemvalue="Spring Boot.AllbookApplication" />
+      <item itemvalue="Spring Boot.AllcolleageApplication" />
+      <item itemvalue="Spring Boot.AllexerciseApplication" />
+      <item itemvalue="Spring Boot.AllstudioApplication" />
+      <item itemvalue="Spring Boot.AlltaskApplication" />
+      <item itemvalue="Spring Boot.AlluserApplication" />
+      <item itemvalue="Spring Boot.AllusersApplication" />
+      <item itemvalue="Spring Boot.AllvedioApplication" />
+      <item itemvalue="Spring Boot.DelstudentApplication" />
+      <item itemvalue="Spring Boot.LearningplatformApplication" />
+      <item itemvalue="Spring Boot.PublishexerciseApplication" />
+      <item itemvalue="Spring Boot.PublishtaskApplication" />
+      <item itemvalue="Spring Boot.UpdatestuinfoApplication" />
+      <item itemvalue="Spring Boot.UpdateuserperApplication" />
+    </list>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand>
+              <path>
+                <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
+                <item name="Spring Boot" type="7427dc5b:ServiceModel$ServiceGroupNode" />
+              </path>
+              <path>
+                <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
+                <item name="Spring Boot" type="7427dc5b:ServiceModel$ServiceGroupNode" />
+                <item name="Failed" type="7427dc5b:ServiceModel$ServiceGroupNode" />
+              </path>
+            </expand>
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="457a0cf9-1322-4ab8-b72b-fa8fd386c188" name="Default Changelist" comment="" />
+      <created>1618561382486</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1618561382486</updated>
+      <workItem from="1618561383849" duration="97000" />
+      <workItem from="1618563907961" duration="1097000" />
+      <workItem from="1618565047572" duration="300000" />
+      <workItem from="1618709753124" duration="8000" />
+      <workItem from="1618709782465" duration="342000" />
+      <workItem from="1618818337518" duration="48000" />
+      <workItem from="1622075275552" duration="1372000" />
+      <workItem from="1622079764435" duration="7483000" />
+      <workItem from="1622093532995" duration="379000" />
+      <workItem from="1622185841733" duration="1019000" />
+      <workItem from="1622188349513" duration="1833000" />
+      <workItem from="1622212558984" duration="937000" />
+      <workItem from="1622469337689" duration="2562000" />
+      <workItem from="1622505269321" duration="755000" />
+      <workItem from="1622506070062" duration="10734000" />
+      <workItem from="1622529659335" duration="636000" />
+      <workItem from="1622530340560" duration="321000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

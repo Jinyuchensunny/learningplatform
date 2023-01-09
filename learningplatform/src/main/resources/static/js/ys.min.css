@@ -1,0 +1,37 @@
+/*基础*/
+@import "ysbase/base.css";
+@import "ys/animation.css";
+@import "ys/font.css";
+@import "ys/component.css";
+/*模块*/
+@import "ys/layer/css.css";
+@import "ys/toolTips/css.css";
+@import "ys/message/css.css";
+@import "ys/messageBox/css.css";
+@import "ys/dialog/css.css";
+@import "ys/popover/css.css";
+@import "ys/advertising/css.css";
+@import "ys/numberRun/css.css";
+@import "ys/form/css.css";
+@import "ys/robot/css.css";
+@import "ys/sideNav/css.css";
+@import "ys/progress/css.css";
+@import "ys/date/css.css";
+@import "ys/dropDown/css.css";
+@import "ys/headerNav/css.css";
+@import "ys/drag/css.css";
+@import "ys/tab/css.css";
+@import "ys/collapse/css.css";
+@import "ys/tree/css.css";
+@import "ys/table/css.css";
+@import "ys/pagination/css.css";
+@import "ys/swiper/css.css";
+@import "ys/step/css.css";
+@import "ys/transfer/css.css";
+@import "ys/slide/css.css";
+@import "ys/rate/css.css";
+@import "ys/parallax/css.css";
+@import "ys/driver/css.css";
+@import "ys/colorPicker/css.css";
+@import "ys/upload/css.css";
+@import "ys/scrollBox/css.css";

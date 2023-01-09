@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>管理员端</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="admin/images/favicon.ico"/>
+    <link rel="stylesheet" href="admin/css/backend-plugin.min.css">
+    <link rel="stylesheet" href="admin/css/backend.css?v=1.0.0">
+    <link rel="stylesheet" href="admin/vendor/@fortawesome/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="admin/vendor/line-awesome/dist/line-awesome/css/line-awesome.min.css">
+    <link rel="stylesheet" href="admin/vendor/remixicon/fonts/remixicon.css">
+    <link rel="stylesheet" href="admin/vendor/@icon/dripicons/dripicons.css">
+
+    <link rel='stylesheet' href='admin/vendor/fullcalendar/core/main.css'/>
+    <link rel='stylesheet' href='admin/vendor/fullcalendar/daygrid/main.css'/>
+    <link rel='stylesheet' href='admin/vendor/fullcalendar/timegrid/main.css'/>
+    <link rel='stylesheet' href='admin/vendor/fullcalendar/list/main.css'/>
+    <link rel="stylesheet" href="admin/vendor/mapbox/mapbox-gl.css">
+</head>
+<body class=" ">
+<!-- loader Start -->
+<div id="loading">
+    <div id="loading-center">
+    </div>
+</div>
+<!-- loader END -->
+<!-- Wrapper Start -->
+<div class="wrapper">
+
+    <div class="two-sidebar sidebar-1  sidebar-default ">
+        <div class="iq-sidebar-small">
+            <div class="sidebar-top">
+                <div class="iq-sidebar-small-logo">
+                    <a href="#">
+                        <img src="admin/images/logo.png" class="img-fluid" alt="logo">
+                    </a>
+                </div>
+            </div>
+            <div class="sidebar-bottom">
+                <div class="sidebar-menu-icon">
+                    <ul class="nav nav-pills list-inline m-0 p-0" id="icon-pills-tab" role="tablist">
+
+                        <li class="nav-item d-block">
+                            <a class="nav-link" data-toggle="pill" href="#account" role="tab" aria-selected="false">
+                                <svg class="svg-icon" width="26" height="26" xmlns="http://www.w3.org/2000/svg"
+                                     viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                          clip-rule="evenodd"/>
+                                </svg>
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="iq-sidebar">
+            <div class="data-scrollbar" data-scroll="1">
+                <nav class="iq-sidebar-menu">
+                    <div class="tab-content">
+
+                        <div class="tab-pane fade active show" id="account" role="tabpanel">
+                            <div class="iq-sidebar-top">
+                                <div class="top-menu-icon">
+                                    <h4 class="text-uppercase">账号管理</h4>
+                                </div>
+                            </div>
+                            <ul id="accounts" class="iq-menu list-inline m-0">
+
+                                <li class="">
+                                    <a href="#te" class="collapsed" data-toggle="collapse" aria-expanded="false">
+                                        <span>管理用户</span>
+                                        <i class="las la-angle-right iq-arrow-right arrow-active"></i>
+                                        <i class="las la-angle-down iq-arrow-right arrow-hover"></i>
+                                    </a>
+                                    <ul id="te" class="iq-submenu collapse" data-parent="#otherpage">
+
+                                        <li class="active">
+                                            <a th:href="@{/}">
+                                                <span>查看用户基本信息</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </nav>
+                <div class="p-3"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="iq-top-navbar">
+        <div class="iq-navbar-custom">
+            <nav class="navbar navbar-expand-lg navbar-light p-0">
+                <div class="iq-search-bar device-search">
+                    <form>
+                        <div class="input-prepend input-append">
+                            <div class="btn-group">
+                                <label class="dropdown-toggle searchbox" data-toggle="dropdown">
+                                    <input class="dropdown-toggle search-query text search-input" type="text"
+                                           placeholder="Type here to search..."><span class="search-replace"></span>
+                                    <a class="search-link" href="#"><i class="ri-search-line"></i></a>
+                                    <span class="caret"><!--icon--></span>
+                                </label>
+                                <ul class="dropdown-menu">
+                                    <li><a th:href="@{/introduction}">
+                                        <div class="item">平台介绍</div>
+                                    </a></li>
+                                    <li><a th:href="@{/questions}">
+                                        <div class="item">Q&A</div>
+                                    </a></li>
+                                    <li><a th:href="@{/toLogin}">
+                                        <div class="item">登录页面</div>
+                                    </a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="create-dropdown nav-icon dropdown mr-2">
+                    <a href="#" class="search-toggle dropdown-toggle btn btn-primary text-white add-btn"
+                       id="dropdownMenuButton002" data-toggle="dropdown" aria-haspopup="true"
+                       aria-expanded="false">
+                        search<i class="ri-arrow-down-s-line arrow pl-2"></i>
+                    </a>
+                    <div class="iq-sub-dropdown dropdown-menu" aria-labelledby="dropdownMenuButton002">
+                        <div class="card shadow-none m-0">
+                            <div class="card-body p-0">
+
+                                <a href="../backend/page-kubernetes.html" class="">
+                                    <div class="d-flex align-items-center p-3 border-bottom">
+                                        <div class="icon iq-icon-box-2 icon-text bg-body rounded">
+                                            I
+                                        </div>
+                                        <div>
+                                            <h6>主页</h6>
+                                            <p class="mb-0 text-body font-size-14">Create cloud server</p>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a href="../backend/page-apps.html" class="">
+                                    <div class="d-flex align-items-center p-3 border-bottom">
+                                        <div class="icon iq-icon-box-2 icon-text bg-body rounded">
+                                            Q
+                                        </div>
+                                        <div>
+                                            <h6>操作指南</h6>
+                                            <p class="mb-0 text-body font-size-14">Create cloud server</p>
+                                        </div>
+                                    </div>
+                                </a>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse"
+                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-label="Toggle navigation">
+                        <i class="ri-menu-3-line"></i>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav ml-auto navbar-list align-items-center">
+
+                            <li class="nav-item nav-icon search-content">
+                                <a href="#" class="search-toggle rounded" id="dropdownSearch" data-toggle="dropdown"
+                                   aria-haspopup="true" aria-expanded="false">
+                                    <i class="ri-search-line"></i>
+                                </a>
+                                <div class="iq-search-bar iq-sub-dropdown dropdown-menu"
+                                     aria-labelledby="dropdownSearch">
+                                    <form action="#" class="searchbox p-2">
+                                        <div class="form-group mb-0 position-relative">
+                                            <input type="text" class="text search-input font-size-12"
+                                                   placeholder="type here to search...">
+                                            <a href="#" class="search-link"><i class="las la-search"></i></a>
+                                        </div>
+                                    </form>
+                                </div>
+                            </li>
+                            <li class="nav-item nav-icon dropdown">
+                                <a href="#" class="search-toggle dropdown-toggle" id="dropdownMenuButton2"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                         height="24px" width="24px">
+                                        <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
+                                        <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
+                                    </svg>
+                                    <span class="bg-primary"></span>
+                                </a>
+
+                            </li>
+
+                            <li class="nav-item nav-icon dropdown caption-content pl-2 ml-2 border-left">
+                                <a href="#" class="search-toggle dropdown-toggle" id="dropdownMenuButton4"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <div class="d-flex align-items-center">
+                                        <img src="admin/images/user/1.png" class="img-fluid avatar-40 rounded"
+                                             alt="user">
+                                        <div class="caption ml-3">
+                                            <h6 class="mb-1">亲爱的管理员</h6>
+                                            <p class="text-body mb-0"><span class="__cf_email__"
+                                                                            data-cfemail="c9a2bba0babda0a789aea4a8a0a5e7aaa6a4">[email&#160;protected]</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <div class="modal fade" id="new-order" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="popup text-left">
+                        <h4 class="mb-3">New Order</h4>
+                        <div class="content create-workform bg-body">
+                            <div class="pb-3">
+                                <label class="mb-2">Email</label>
+                                <input type="text" class="form-control" placeholder="Enter Name or Email">
+                            </div>
+                            <div class="col-lg-12 mt-4">
+                                <div class="d-flex flex-wrap align-items-ceter justify-content-center">
+                                    <div class="btn btn-primary mr-4" data-dismiss="modal">Cancel</div>
+                                    <div class="btn btn-outline-primary" data-dismiss="modal">Create</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content-page">
+        <div class="container-fluid">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between">
+                                <div class="header-title">
+                                    <h4 class="card-title">用户列表</h4>
+                                </div>
+                            </div>
+                            <div class="card-body custom-card-space">
+                                <p>所有用户如下，包括已冻结，已删除，正常运行的用户。<code></code></p>
+                                <div class="table-responsive tbl-server-info py-3 rounded">
+                                    <table id="datatable" class="table data-table table-striped">
+                                        <thead>
+                                        <tr class="ligth">
+                                            <th>用户Id</th>
+                                            <th>用户密码/th>
+                                            <th>登录名</th>
+                                            <th>用户名</th>
+                                            <th>用户邮箱</th>
+                                            <th>用户电话号码</th>
+                                            <th>用户账号当前状态</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="users:${users}">
+                                            <td th:text="${users.getUser_id()}"></td>
+                                            <td th:text="${users.getLogin_pwd()}"></td>
+                                            <td th:text="${users.getLogin_name()}"></td>
+                                            <td th:text="${users.getUser_name()}"></td>
+                                            <td th:text="${users.getEmail()}"></td>
+                                            <td th:text="${users.getTel()}"></td>
+
+                                            <td th:if="${users.getStatus()} eq 0">
+                                                <i>运行中</i>
+                                            </td>
+                                            <td th:if="${users.getStatus()} eq 1">
+                                                <i>已删除</i>
+                                            </td>
+                                            <td th:if="${users.getStatus()} eq 2">
+                                                <i>已冻结</i>
+                                            </td>
+                                        </tr>
+
+                                        </tbody>
+                                        <tfoot>
+                                        <tr>
+                                            <th>用户Id</th>
+                                            <th>用户密码/th>
+                                            <th>登录名</th>
+                                            <th>用户名</th>
+                                            <th>用户邮箱</th>
+                                            <th>用户电话号码</th>
+                                            <th>用户账号当前状态</th>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+<!-- Wrapper End-->
+<footer class="iq-footer">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6">
+
+            </div>
+            <div class="col-lg-6 text-right">
+                <span class="mr-1"><script>document.write(new Date().getFullYear())</script>©</span> <a href="#"
+                                                                                                        class="">Web3d短视频学习平台</a>.
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- Backend Bundle JavaScript -->
+<script src="admin/js/backend-bundle.min.js"></script>
+
+<!-- Flextree Javascript-->
+<script src="admin/js/flex-tree.min.js"></script>
+<script src="admin/js/tree.js"></script>
+
+<!-- Table Treeview JavaScript -->
+<script src="admin/js/table-treeview.js"></script>
+
+<!-- Masonary Gallery Javascript -->
+<script src="admin/js/masonry.pkgd.min.js"></script>
+<script src="admin/js/imagesloaded.pkgd.min.js"></script>
+
+<!-- Mapbox Javascript -->
+<script src="admin/js/mapbox-gl.js"></script>
+<script src="admin/js/mapbox.js"></script>
+
+<!-- Fullcalender Javascript -->
+<script src='admin/vendor/fullcalendar/core/main.js'></script>
+<script src='admin/vendor/fullcalendar/daygrid/main.js'></script>
+<script src='admin/vendor/fullcalendar/timegrid/main.js'></script>
+<script src='admin/vendor/fullcalendar/list/main.js'></script>
+
+<!-- SweetAlert JavaScript -->
+<script src="admin/js/sweetalert.js"></script>
+
+<!-- Vectoe Map JavaScript -->
+<script src="admin/js/vector-map-custom.js"></script>
+
+<!-- Chart Custom JavaScript -->
+<script src="admin/js/customizer.js"></script>
+
+<!-- Chart Custom JavaScript -->
+<script src="admin/js/chart-custom.js"></script>
+
+<!-- slider JavaScript -->
+<script src="admin/js/slider.js"></script>
+
+<!-- app JavaScript -->
+<script src="admin/js/app.js"></script>
+</body>
+</html>

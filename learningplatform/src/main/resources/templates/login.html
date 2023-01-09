@@ -1,0 +1,89 @@
+<!--
+Author: W3layouts
+Author URL: http://w3layouts.com
+-->
+<!DOCTYPE html>
+<html lang="zxx" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>web3D短视频学习平台</title>
+    <!-- Meta tag Keywords -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8" />
+    <meta name="keywords"
+          content="Flat lay login form Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
+    <!-- //Meta tag Keywords -->
+
+    <link href="//fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!--/Style-CSS -->
+    <link rel="stylesheet" href="css/login.css" type="text/css" media="all" />
+    <!--//Style-CSS -->
+
+    <script src="fontawesome/fontawesome.js" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+<!-- form section start -->
+<section class="w3l-workinghny-form">
+    <!-- /form -->
+    <div class="workinghny-form-grid">
+        <div class="wrapper">
+            <div class="logo">
+                <h1><a class="brand-logo" href="test.html">登录web3D短视频学习平台</a></h1>
+                <!-- if logo is image enable this
+                    <a class="brand-logo" href="#index.html">
+                        <img src="image-path" alt="Your logo" title="Your logo" style="height:35px;" />
+                    </a> -->
+            </div>
+            <div class="workinghny-block-grid">
+                <div class="form-right-inf">
+                    <h2>关于我们 </h2>
+                    <div class="social-media">
+                        <a th:href="@{/questions}" class="fb"><span class="fab fa-facebook" aria-hidden="true"></span>常见问题&回答 </a>
+                        <a th:href="@{/introduction}" class="tw"><span class="fab fa-twitter" aria-hidden="true"></span> 该平台的介绍 </a>
+                    </div>
+
+
+                    <form id="loginform" th:action="@{/login}">
+                        <div class="login-form-content">
+                            <h2>登录</h2>
+                            <form action="#" class="signin-form" method="post">
+                                <div class="one-frm">
+                                    <input type="text" th:name="LoginName" placeholder="账号名" required="" autofocus>
+                                </div>
+                                <div class="one-frm">
+                                    <input type="password" th:name="Password" placeholder="密码" required="">
+                                </div>
+                                <label class="check-remaind">
+                                    <input type="checkbox">
+                                    <span class="checkmark"></span>
+                                    <p class="remember">记住我</p>
+                                    <p class="information"  th:text="${msg}" th:if="${!#strings.isEmpty(msg)}"></p>
+                                </label>
+                                <button class="btn btn-style mt-3">登录 </button>
+                                <p class="already">还没有账号? <a th:href="@{/toRegister}">注册</a></p>
+                            </form>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- //form -->
+    <!-- copyright-->
+    <div class="copyright text-center">
+        <div class="wrapper">
+            <!--<p class="copy-footer-29">© 2020 Flat lay login form. All rights reserved | Design by <a
+                    href="https://w3layouts.com">W3layouts</a></p>-->
+        </div>
+    </div>
+    <!-- //copyright-->
+</section>
+<!-- //form section start -->
+</body>
+
+</html>

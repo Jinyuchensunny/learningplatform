@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="learningplatform" />
+        <module name="learningplatform (1) (com)" />
+        <module name="allusers" />
+        <module name="updatestuinfo" />
+        <module name="alltask" />
+        <module name="allexercise" />
+        <module name="allbook" />
+        <module name="addcolleage" />
+        <module name="allcolleage" />
+        <module name="updateuserper" />
+        <module name="allstudio" />
+        <module name="allvedio" />
+        <module name="publishexercise" />
+        <module name="alluser" />
+        <module name="delstudent" />
+        <module name="addstudio" />
+        <module name="publishtask" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="addcolleage" options="-parameters" />
+      <module name="addstudio" options="-parameters" />
+      <module name="allbook" options="-parameters" />
+      <module name="allcolleage" options="-parameters" />
+      <module name="allexercise" options="-parameters" />
+      <module name="allstudio" options="-parameters" />
+      <module name="alltask" options="-parameters" />
+      <module name="alluser" options="-parameters" />
+      <module name="allusers" options="-parameters" />
+      <module name="allvedio" options="-parameters" />
+      <module name="delstudent" options="-parameters" />
+      <module name="learningplatform" options="-parameters" />
+      <module name="learningplatform (1) (com)" options="-parameters" />
+      <module name="publishexercise" options="-parameters" />
+      <module name="publishtask" options="-parameters" />
+      <module name="updatestuinfo" options="-parameters" />
+      <module name="updateuserper" options="-parameters" />
+    </option>
+  </component>
+</project>

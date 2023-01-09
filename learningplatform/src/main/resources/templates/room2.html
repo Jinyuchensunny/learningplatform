@@ -1,0 +1,1802 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>Title</title>
+    <link rel="stylesheet" href="ys/ys.min.css">
+    <link rel="stylesheet" href="ys/pageStyle.css">
+    <style>
+        .box1 {
+            position: absolute;
+            padding: 10px 15px;
+            background-color: rgba(0, 127, 127, 0.447);
+            color: #fff;
+            border: 1px solid #3cc47c;
+        }
+
+        .box2 {
+            position: absolute;
+            color: #fff;
+            background-color: rgba(0, 127, 127, 0.447);
+            box-shadow: 0px 0px 12px rgba(0, 255, 255, 0.5);
+            border: 1px solid rgba(127, 255, 255, 0.25);
+
+        }
+
+        .box2 .ys-con1 {
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.75);
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.95);
+        }
+
+        .box2 .ys-con {
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.75);
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.95);
+
+        }
+
+        .ys-tit-sm1 {
+            line-height: 40px;
+            font-size: 16px;
+            padding-right: 20px;
+            transform: rotateY(180deg);
+        }
+
+        .ys-tit-sm1 span:first-child {
+            border-left: 4px solid #14AE68;
+            padding-left: 10px;
+            transform: rotateY(180deg);
+        }
+
+        .box1 .ys-con {
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.75);
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.95);
+        }
+    </style>
+</head>
+<body>
+<div class="ys-absolute-container" id="box" style="overflow: hidden"></div>
+<canvas id="canvas" style="display: none;">你的浏览器不支持canvas</canvas>
+<canvas id="canvas2" style="display: none;">你的浏览器不支持canvas</canvas>
+</body>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/three.js"></script>
+<script src="js/OrbitControls.js"></script>
+<script src="js/CSS2DRenderer.js"></script>
+<script src="js/CSS3DRenderer.js"></script>
+<script src="js/ysThree.js"></script>
+<script src="js1/loaders/OBJLoader.js"></script>
+<script src="js1/loaders/MTLLoader.js"></script>
+<script src="js1/loaders/DDSLoader.js"></script>
+<script src="js/tween.min.js"></script>
+<script src="js1/WebGL.js"></script>
+<script src="js1/three_sprite_utils.js"></script>
+<script src="js1/controls/TrackballControls.js"></script>
+<script th:inline="javascript">
+
+    var renwushijian = "";
+    var speakone = 0;
+    speak("请点击辅导员领取任务");
+
+    function speak(text) {
+        if ('speechSynthesis' in window) {
+            var sentence = new SpeechSynthesisUtterance();
+            var voices = window.speechSynthesis.getVoices();
+            for (var i = 0; i < voices.length; i++) {
+                if (voices[i]['name'] == "Alex") {
+                    sentence.voice = voices[i];
+                }
+            }
+            sentence.pitch = 1;
+            sentence.rate = 0.7;//速度
+            sentence.text = text;
+            window.speechSynthesis.speak(sentence);
+        } else {
+            console.log("Oops! Your browser does not support HTML SpeechSynthesis.")
+        }
+    }
+
+
+    let img_num = 1;
+    var objs;
+    var objs1 = [];
+    let flag = 1;
+    var strnow = "#";
+    var bookstrnow = "#";
+
+    const el = document.getElementById('box')
+    const app = new YsThree(el, {})
+    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(0, 40, 50);
+    camera.lookAt(new THREE.Vector3(0, 0, 0));
+    const renderer = app.renderer
+    const scene = app.scene
+
+    //给场景添加天空盒子纹理
+    var cubeTextureLoader = new THREE.CubeTextureLoader();
+    cubeTextureLoader.setPath('image/');
+    var cubeTexture = cubeTextureLoader.load([
+        'RT.jpg', 'LF.jpg',
+        'UP.jpg', 'DN.jpg',
+        'BK.jpg', 'FR.jpg'
+    ]);
+
+    scene.background = cubeTexture;
+
+
+    function initModel() {
+
+
+        let canvas = document.getElementById('canvas2')
+        let ctx = canvas.getContext('2d')
+        canvas.width = 300
+        canvas.height = 300
+        ctx.fillStyle = "rgba(255,165,0,0.8)";
+        ctx.fillRect(0, 0, 300, 300)
+        ctx.fillStyle = "#fff";
+        //ctx.font = 'normal 18pt "楷体"'
+        ctx.font = 'normal 18pt bold sans-serif'
+        ctx.fillText('用户个人信息', 100, 25)
+        ctx.fillText('姓名：', 15, 50)
+        let name = [[${name}]]
+        ctx.fillText(name, 80, 50)
+        ctx.fillText('所属学院：', 15, 75)
+        let college = [[${college}]]
+        ctx.fillText(college, 125, 75)
+        ctx.fillText('所属工作室:', 15, 100)
+        let studio = [[${studio}]]
+        ctx.fillText(studio, 150, 100)
+        ctx.fillText('等级:', 15, 125)
+        var number = [[${sum}]];
+        ctx.fillText(number, 80, 125)
+        var myArray1 = new Array(4);
+        myArray1[0] = "Ⅰ";
+        myArray1[1] = "Ⅱ";
+        myArray1[2] = "Ⅲ";
+        myArray1[3] = "Ⅳ";
+        var myArray2 = new Array(6);
+        myArray2[0] = "倔强青铜";
+        myArray2[1] = "秩序白银";
+        myArray2[2] = "荣耀黄金";
+        myArray2[3] = "尊贵铂金";
+        myArray2[4] = "永恒钻石";
+        myArray2[5] = "至尊星耀";
+        ctx.fillText('当前段位：', 15, 150);
+        var duanwei = "#";
+        if (number % 4 == 0 && number != 0)
+            duanwei = myArray2[(number - number % 4) / 4 - 1] + myArray1[3];
+        else if (number != 0)
+            duanwei = myArray2[(number - number % 4) / 4] + myArray1[number%4-1];
+        else
+            duanwei="无段位";
+        ctx.fillText(duanwei, 125, 150);
+
+
+        let url = canvas.toDataURL('image/png');
+
+        let geometry1 = new THREE.PlaneGeometry(30, 30)
+        let texture = THREE.ImageUtils.loadTexture(url, null, function (t) {
+        })
+
+        let material1 = new THREE.MeshBasicMaterial({
+            map: texture,
+            side: THREE.DoubleSide,
+            opacity: 1,
+            transparent: true,
+        })
+
+        let rect = new THREE.Mesh(geometry1, material1)
+        rect.position.y = 18;//14.5
+        rect.position.x = -25.5;//-25.5
+        rect.position.z = 6.7;
+        rect.scale.set(0.15, 0.15, 0.15);
+        scene.add(rect)
+
+
+        var onProgress = function (xhr) {
+            console.log(xhr)
+            if (xhr.lengthComputable) {
+                var percentComplete = xhr.loaded / xhr.total * 100;
+                console.log(Math.round(percentComplete, 2) + '% downloaded');
+            }
+        };
+
+        var onError = function (xhr) {
+        };
+
+        THREE.Loader.Handlers.add(/\.dds$/i, new THREE.DDSLoader());
+        let flag345=1;
+        var numbers;
+        if (number % 4 != 0 && number != 0)
+        {
+            numbers = number % 4;
+           // flag345=1;
+            }
+        else if (number % 4 == 0&&number!=0){
+            numbers = 4;
+           // flag345=1;
+        }
+        else if(number == 0){
+          //  flag345=0;
+            numbers=0;
+        }
+            for (var l = 0; l <= numbers; l++) {
+                Model_load(l);
+            }
+
+
+        function Model_load(k) {
+
+            var mtlLoader = new THREE.MTLLoader();
+            mtlLoader.setPath('models2/');
+            mtlLoader.load(k + '.mtl', function (materials) {
+                materials.preload();
+                var objLoader = new THREE.OBJLoader();
+                objLoader.setMaterials(materials);
+                objLoader.setPath('models2/');
+                objLoader.load(k + '.obj', function (object) {
+                    object.name = k;
+                    object.position.y = 12.5;
+                    object.position.x = -25.8;
+                    object.position.z = 7.3;
+                    object.scale.set(0.6, 0.6, 0.6);
+                    object.rotation.set(0, -1.6, 0);//1.45
+                    scene.add(object);
+
+                }, onProgress, onError);
+
+            });
+        }
+
+
+        var mtlLoader = new THREE.MTLLoader();
+        mtlLoader.setPath('models2/');
+        mtlLoader.load('lianxi.mtl', function (materials) {
+
+            materials.preload();
+
+            var objLoader = new THREE.OBJLoader();
+            objLoader.setMaterials(materials);
+            objLoader.setPath('models2/');
+            objLoader.load('lianxi.obj', function (object) {
+                object.name = "lianxi";
+                object.position.y = -0.5;
+                object.scale.set(3, 3, 3);
+                scene.add(object);
+
+            }, onProgress, onError);
+
+        });
+
+        var onProgress = function (xhr) {
+            console.log(xhr)
+            if (xhr.lengthComputable) {
+                var percentComplete = xhr.loaded / xhr.total * 100;
+                console.log(Math.round(percentComplete, 2) + '% downloaded');
+            }
+        };
+
+        var onError = function (xhr) {
+        };
+
+        var onProgress = function (xhr) {
+            console.log(xhr)
+            if (xhr.lengthComputable) {
+                var percentComplete = xhr.loaded / xhr.total * 100;
+                console.log(Math.round(percentComplete, 2) + '% downloaded');
+            }
+        };
+        var onError = function (xhr) {
+        };
+        THREE.Loader.Handlers.add(/\.dds$/i, new THREE.DDSLoader());
+
+        var mtlLoader = new THREE.MTLLoader();
+        mtlLoader.setPath('models2/');
+        mtlLoader.load('renwu.mtl', function (materials) {
+
+            materials.preload();
+
+            var objLoader = new THREE.OBJLoader();
+            objLoader.setMaterials(materials);
+            objLoader.setPath('models2/');
+            objLoader.load('renwu.obj', function (object) {
+                object.name = "renwu";
+                object.position.y = -0.5;
+                object.scale.set(3, 3, 3);
+                scene.add(object);
+
+            }, onProgress, onError);
+
+        });
+        var mtlLoader = new THREE.MTLLoader();
+        mtlLoader.setPath('models2/');
+        mtlLoader.load('pingmian.mtl', function (materials) {
+
+            materials.preload();
+
+            var objLoader = new THREE.OBJLoader();
+            objLoader.setMaterials(materials);
+            objLoader.setPath('models2/');
+            objLoader.load('pingmian.obj', function (object) {
+                object.name = "pingmian";
+                object.position.y = -0.5;
+                object.scale.set(3, 3, 3);
+                scene.add(object);
+
+            }, onProgress, onError);
+
+        });
+        var mtlLoader = new THREE.MTLLoader();
+        mtlLoader.setPath('models2/');
+        mtlLoader.load('shujia.mtl', function (materials) {
+
+            materials.preload();
+
+            var objLoader = new THREE.OBJLoader();
+            objLoader.setMaterials(materials);
+            objLoader.setPath('models2/');
+            objLoader.load('shujia.obj', function (object) {
+                object.name = "shujia";
+                object.position.y = -0.5;
+                object.scale.set(3, 3, 3);
+                scene.add(object);
+
+            }, onProgress, onError);
+
+        });
+        var mtlLoader = new THREE.MTLLoader();
+        mtlLoader.setPath('models2/');
+        mtlLoader.load('zhuomian1.mtl', function (materials) {
+
+            materials.preload();
+
+            var objLoader = new THREE.OBJLoader();
+            objLoader.setMaterials(materials);
+            objLoader.setPath('models2/');
+            objLoader.load('zhuomian1.obj', function (object) {
+                object.name = "zhuomian1";
+                object.position.y = -0.5;
+                object.scale.set(3, 3, 3);
+                scene.add(object);
+
+            }, onProgress, onError);
+
+        });
+        var mtlLoader = new THREE.MTLLoader();
+        mtlLoader.setPath('models2/');
+        mtlLoader.load('zhuomian2.mtl', function (materials) {
+
+            materials.preload();
+
+            var objLoader = new THREE.OBJLoader();
+            objLoader.setMaterials(materials);
+            objLoader.setPath('models2/');
+            objLoader.load('zhuomian2.obj', function (object) {
+                object.name = "zhuomian2";
+                object.position.y = -0.5;
+                object.scale.set(3, 3, 3);
+                scene.add(object);
+
+            }, onProgress, onError);
+
+        });
+        var mtlLoader = new THREE.MTLLoader();
+        mtlLoader.setPath('models2/');
+        mtlLoader.load('pingmu.mtl', function (materials) {
+
+            materials.preload();
+
+            var objLoader = new THREE.OBJLoader();
+            objLoader.setMaterials(materials);
+            objLoader.setPath('models2/');
+            objLoader.load('pingmu.obj', function (object) {
+                object.name = "pingmu";
+                object.position.y = -0.5;
+                object.scale.set(3, 3, 3);
+                scene.add(object);
+
+            }, onProgress, onError);
+
+        });
+        var mtlLoader = new THREE.MTLLoader();
+        mtlLoader.setPath('models2/');
+        mtlLoader.load('dianzishu.mtl', function (materials) {
+
+            materials.preload();
+
+            var objLoader = new THREE.OBJLoader();
+            objLoader.setMaterials(materials);
+            objLoader.setPath('models2/');
+            objLoader.load('dianzishu.obj', function (object) {
+                object.name = "dianzishu";
+                object.position.y = -0.5;
+                object.scale.set(3, 3, 3);
+                scene.add(object);
+
+            }, onProgress, onError);
+
+        });
+        var mtlLoader = new THREE.MTLLoader();
+        mtlLoader.setPath('models2/');
+        mtlLoader.load('zhuomian3.mtl', function (materials) {
+
+            materials.preload();
+
+            var objLoader = new THREE.OBJLoader();
+            objLoader.setMaterials(materials);
+            objLoader.setPath('models2/');
+            objLoader.load('zhuomian3.obj', function (object) {
+                object.name = "zhuomian3";
+                object.position.y = -0.5;
+                object.scale.set(3, 3, 3);
+                scene.add(object);
+
+            }, onProgress, onError);
+
+        });
+        var mtlLoader = new THREE.MTLLoader();
+        mtlLoader.setPath('models2/');
+        mtlLoader.load('book1.mtl', function (materials) {
+
+            materials.preload();
+
+            var objLoader = new THREE.OBJLoader();
+            objLoader.setMaterials(materials);
+            objLoader.setPath('models2/');
+            objLoader.load('book1.obj', function (object) {
+                object.name = "book1";
+                object.position.y = -0.5;
+                object.scale.set(3, 3, 3);
+                scene.add(object);
+
+            }, onProgress, onError);
+
+        });
+        var mtlLoader = new THREE.MTLLoader();
+        mtlLoader.setPath('models2/');
+        mtlLoader.load('book2.mtl', function (materials) {
+
+            materials.preload();
+
+            var objLoader = new THREE.OBJLoader();
+            objLoader.setMaterials(materials);
+            objLoader.setPath('models2/');
+            objLoader.load('book2.obj', function (object) {
+                object.name = "book2";
+                object.position.y = -0.5;
+                object.scale.set(3, 3, 3);
+                scene.add(object);
+
+            }, onProgress, onError);
+
+        });
+        var mtlLoader = new THREE.MTLLoader();
+        mtlLoader.setPath('models2/');
+        mtlLoader.load('book3.mtl', function (materials) {
+
+            materials.preload();
+
+            var objLoader = new THREE.OBJLoader();
+            objLoader.setMaterials(materials);
+            objLoader.setPath('models2/');
+            objLoader.load('book3.obj', function (object) {
+                object.name = "book3";
+                object.position.y = -0.5;
+                object.scale.set(3, 3, 3);
+                scene.add(object);
+
+            }, onProgress, onError);
+
+        });
+        var mtlLoader = new THREE.MTLLoader();
+        mtlLoader.setPath('models2/');
+        mtlLoader.load('book4.mtl', function (materials) {
+
+            materials.preload();
+
+            var objLoader = new THREE.OBJLoader();
+            objLoader.setMaterials(materials);
+            objLoader.setPath('models2/');
+            objLoader.load('book4.obj', function (object) {
+                object.name = "book4";
+                object.position.y = -0.5;
+                object.scale.set(3, 3, 3);
+                scene.add(object);
+
+            }, onProgress, onError);
+
+        });
+        var mtlLoader = new THREE.MTLLoader();
+        mtlLoader.setPath('models2/');
+        mtlLoader.load('book5.mtl', function (materials) {
+
+            materials.preload();
+
+            var objLoader = new THREE.OBJLoader();
+            objLoader.setMaterials(materials);
+            objLoader.setPath('models2/');
+            objLoader.load('book5.obj', function (object) {
+                object.name = "book5";
+                object.position.y = -0.5;
+                object.scale.set(3, 3, 3);
+                scene.add(object);
+
+            }, onProgress, onError);
+
+        });
+        var mtlLoader = new THREE.MTLLoader();
+        mtlLoader.setPath('models2/');
+        mtlLoader.load('book6.mtl', function (materials) {
+
+            materials.preload();
+
+            var objLoader = new THREE.OBJLoader();
+            objLoader.setMaterials(materials);
+            objLoader.setPath('models2/');
+            objLoader.load('book6.obj', function (object) {
+                object.name = "book6";
+                object.position.y = -0.5;
+                object.scale.set(3, 3, 3);
+                scene.add(object);
+
+            }, onProgress, onError);
+
+        });
+        var mtlLoader = new THREE.MTLLoader();
+        mtlLoader.setPath('models2/');
+        mtlLoader.load('book7.mtl', function (materials) {
+
+            materials.preload();
+
+            var objLoader = new THREE.OBJLoader();
+            objLoader.setMaterials(materials);
+            objLoader.setPath('models2/');
+            objLoader.load('book7.obj', function (object) {
+                object.name = "book7";
+                object.position.y = -0.5;
+                object.scale.set(3, 3, 3);
+                scene.add(object);
+
+            }, onProgress, onError);
+
+        });
+        var mtlLoader = new THREE.MTLLoader();
+        mtlLoader.setPath('models2/');
+        mtlLoader.load('book8.mtl', function (materials) {
+
+            materials.preload();
+
+            var objLoader = new THREE.OBJLoader();
+            objLoader.setMaterials(materials);
+            objLoader.setPath('models2/');
+            objLoader.load('book8.obj', function (object) {
+                object.name = "book8";
+                object.position.y = -0.5;
+                object.scale.set(3, 3, 3);
+                scene.add(object);
+
+            }, onProgress, onError);
+
+        });
+        var mtlLoader = new THREE.MTLLoader();
+        mtlLoader.setPath('models2/');
+        mtlLoader.load('dianzishu1.mtl', function (materials) {
+
+            materials.preload();
+
+            var objLoader = new THREE.OBJLoader();
+            objLoader.setMaterials(materials);
+            objLoader.setPath('models2/');
+            objLoader.load('dianzishu1.obj', function (object) {
+                object.name = "dianzishu1";
+                object.position.y = -0.5;
+                object.scale.set(3, 3, 3);
+                scene.add(object);
+
+            }, onProgress, onError);
+
+        });
+        var mtlLoader = new THREE.MTLLoader();
+        mtlLoader.setPath('models2/');
+        mtlLoader.load('dianzishu2.mtl', function (materials) {
+
+            materials.preload();
+
+            var objLoader = new THREE.OBJLoader();
+            objLoader.setMaterials(materials);
+            objLoader.setPath('models2/');
+            objLoader.load('dianzishu2.obj', function (object) {
+                object.name = "dianzishu2";
+                object.position.y = -0.5;
+                object.scale.set(3, 3, 3);
+                scene.add(object);
+
+            }, onProgress, onError);
+
+        });
+        var mtlLoader = new THREE.MTLLoader();
+        mtlLoader.setPath('models2/');
+        mtlLoader.load('dianzishu3.mtl', function (materials) {
+
+            materials.preload();
+
+            var objLoader = new THREE.OBJLoader();
+            objLoader.setMaterials(materials);
+            objLoader.setPath('models2/');
+            objLoader.load('dianzishu3.obj', function (object) {
+                object.name = "dianzishu3";
+                object.position.y = -0.5;
+                object.scale.set(3, 3, 3);
+                scene.add(object);
+
+            }, onProgress, onError);
+
+        });
+        var mtlLoader = new THREE.MTLLoader();
+        mtlLoader.setPath('models2/');
+        mtlLoader.load('dianzishu4.mtl', function (materials) {
+
+            materials.preload();
+
+            var objLoader = new THREE.OBJLoader();
+            objLoader.setMaterials(materials);
+            objLoader.setPath('models2/');
+            objLoader.load('dianzishu4.obj', function (object) {
+                object.name = "dianzishu4";
+                object.position.y = -0.5;
+                object.scale.set(3, 3, 3);
+                scene.add(object);
+
+            }, onProgress, onError);
+
+        });
+        var mtlLoader = new THREE.MTLLoader();
+        mtlLoader.setPath('models2/');
+        mtlLoader.load('dianzishu5.mtl', function (materials) {
+
+            materials.preload();
+
+            var objLoader = new THREE.OBJLoader();
+            objLoader.setMaterials(materials);
+            objLoader.setPath('models2/');
+            objLoader.load('dianzishu5.obj', function (object) {
+                object.name = "dianzishu5";
+                object.position.y = -0.5;
+                object.scale.set(3, 3, 3);
+                scene.add(object);
+
+            }, onProgress, onError);
+
+        });
+        var mtlLoader = new THREE.MTLLoader();
+        mtlLoader.setPath('models2/');
+        mtlLoader.load('dianzishu6.mtl', function (materials) {
+            materials.preload();
+            var objLoader = new THREE.OBJLoader();
+            objLoader.setMaterials(materials);
+            objLoader.setPath('models2/');
+            objLoader.load('dianzishu6.obj', function (object) {
+                object.name = "dianzishu6";
+                object.position.y = -0.5;
+                object.scale.set(3, 3, 3);
+                scene.add(object);
+            }, onProgress, onError);
+        });
+
+    }
+
+    initModel()
+
+
+    function initControls() {
+
+        controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+        // 如果使用animate方法时，将此函数删除
+        //controls.addEventListener( 'change', render );
+        // 使动画循环使用时阻尼或自转 意思是否有惯性
+        controls.enableDamping = true;
+        //动态阻尼系数 就是鼠标拖拽旋转灵敏度
+        //controls.dampingFactor = 0.25;
+        //是否可以缩放
+        controls.enableZoom = true;
+        //是否自动旋转
+        //controls.autoRotate = true;
+        //设置相机距离原点的最远距离
+        controls.minDistance = 1;
+        //设置相机距离原点的最远距离
+        controls.maxDistance = 200;
+        //是否开启右键拖拽
+        controls.enablePan = true;
+    }
+
+    initControls()
+    const clock = new THREE.Clock()
+    // app.initStatus(Stats)
+
+    renderer.setPixelRatio(window.devicePixelRatio)
+
+
+    //add light
+    /*const directionalLight = new THREE.DirectionalLight( '#fff' )
+      directionalLight.position.set( 30, 30, 30 ).normalize()
+      scene.add( directionalLight )
+      const ambientLight = new THREE.AmbientLight('#fff',0.3) // obj 唯一 id
+      scene.add(ambientLight)*/
+
+    const ambientlight = new THREE.AmbientLight(0xffffff); //6688cc
+    ambientlight.castShadow = true;
+    scene.add(ambientlight);
+    const fillLight3 = new THREE.DirectionalLight(0xffffff, 0.5);// 0xff9999
+    fillLight3.position.set(0, 100, 0);
+    scene.add(fillLight3);
+
+
+    const instance2 = new app.CssRenderer(THREE.CSS3DRenderer)
+    const css3DRenderer = instance2.cssRenderer
+
+
+    var watchingVideoId = -1;
+    var watchingBookId = -1;
+
+    function onMouseClick(event) {
+        var mesh2;
+        var raycaster = new THREE.Raycaster();
+        var mouse = new THREE.Vector2();
+        //通过鼠标点击的位置计算出raycaster所需要的点的位置，以屏幕中心为原点，值的范围为-1到1.
+
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+        // 通过鼠标点的位置和当前相机的矩阵计算出raycaster
+        raycaster.setFromCamera(mouse, camera);
+        //找到场景中所有外部模型
+        var scensObjs = [];
+        scene.children.forEach(child => {
+            for (var i = 0; i < child.children.length; i++) {
+                var obj = child.children[i];
+                scensObjs.push(obj);
+
+            }
+        });
+        // 获取raycaster直线和所有模型相交的数组集合
+
+        var intersects = raycaster.intersectObjects(scensObjs);
+        var intersect = intersects[0];
+        if (intersect.object instanceof THREE.Mesh) {
+            var obj = intersect.object.parent;
+            //if语句
+            if (obj.name == "1" || obj.name == "2" || obj.name == "3" || obj.name == "4") {
+                if ([[${sum}]] % 4 == 0) window.location.href = "/getBonus?userId=" + [[${userId}]] + "&studioId=" + [[${studioId}]];
+            }
+            if (obj.name == "xdianzishu") {
+                scene.remove(obj);
+                scene.remove(quanjushangfan);
+                scene.remove(quanjuxiafan)
+                scene.remove(meshdianzishu1);
+                camera.position.set(0, 40, 50);
+                controls.target = new THREE.Vector3(0, 0, 0);
+                console.log("x")
+                window.location.href = "/room?userId=" + [[${userId}]] + "&studioId=" + [[${studioId}]] + "&taskId=-1" + "&videoId=" + watchingVideoId + "&bookId=" + watchingBookId;
+            }
+            if (obj.name == "x") {
+                video.muted = true;
+                scene.remove(obj);
+                scene.remove(meshvideo);
+                camera.position.set(0, 40, 50);
+                controls.target = new THREE.Vector3(0, 0, 0);
+                console.log("x")
+                window.location.href = "/room?userId=" + [[${userId}]] + "&studioId=" + [[${studioId}]] + "&taskId=-1" + "&videoId=" + watchingVideoId + "&bookId=" + watchingBookId;
+            }
+
+            var videos = [[${videos}]];
+            var len = videos.length;
+            var str = "#";
+            if (obj.name == "book1" && len >= 1) {
+                //停止
+                window.speechSynthesis.cancel();
+                str = "/videos/" + videos[0].url;
+                watchingVideoId = videos[0].videoId;
+            }
+            if (obj.name == "book2" && len >= 2) {
+                //停止
+                window.speechSynthesis.cancel();
+                str = "/videos/" + videos[1].url;
+                watchingVideoId = videos[1].videoId;
+            }
+            if (obj.name == "book3" && len >= 3) {
+                //停止
+                window.speechSynthesis.cancel();
+                str = "/videos/" + videos[2].url;
+                watchingVideoId = videos[2].videoId;
+            }
+            if (obj.name == "book4" && len >= 4) {
+                //停止
+                window.speechSynthesis.cancel();
+                str = "/videos/" + videos[3].url;
+                watchingVideoId = videos[3].videoId;
+            }
+            if (obj.name == "book5" && len >= 5) {
+                //停止
+                window.speechSynthesis.cancel();
+                str = "/videos/" + videos[4].url;
+                watchingVideoId = videos[4].videoId;
+            }
+            if (obj.name == "book6" && len >= 6) {
+                //停止
+                window.speechSynthesis.cancel();
+                str = "/videos/" + videos[5].url;
+                watchingVideoId = videos[5].videoId;
+            }
+            if (obj.name == "book7" && len >= 7) {
+                //停止
+                window.speechSynthesis.cancel();
+                str = "/videos/" + videos[6].url;
+                watchingVideoId = videos[6].videoId;
+            }
+            if (obj.name == "book8" && len >= 8) {
+                //停止
+                window.speechSynthesis.cancel();
+                str = "/videos/" + videos[7].url;
+                watchingVideoId = videos[7].videoId;
+            }
+            var books = [[${books}]];
+            var bookstr = "#";
+            if (obj.name == "dianzishu1") {
+                //停止
+                window.speechSynthesis.cancel();
+                bookstr = 'models2/pdf/' + books[0].url;
+                // console.log("bookstr:" + bookstr);
+                watchingBookId = books[0].bookId;
+            }
+            if (obj.name == "dianzishu2") {
+                //停止
+                window.speechSynthesis.cancel();
+                bookstr = 'models2/pdf/' + books[1].url;
+                // console.log("bookstr:" + bookstr);
+                watchingBookId = books[1].bookId;
+            }
+            if (obj.name == "dianzishu3") {
+                //停止
+                window.speechSynthesis.cancel();
+                bookstr = 'models2/pdf/' + books[2].url;
+                watchingBookId = books[2].bookId;
+            }
+            if (obj.name == "dianzishu4") {
+                //停止
+                window.speechSynthesis.cancel();
+                bookstr = 'models2/pdf/' + books[3].url;
+                watchingBookId = books[3].bookId;
+            }
+            if (obj.name == "dianzishu5") {
+                //停止
+                window.speechSynthesis.cancel();
+                bookstr = 'models2/pdf/' + books[4].url;
+                watchingBookId = books[4].bookId;
+            }
+            if (obj.name == "dianzishu6") {
+                //停止
+                window.speechSynthesis.cancel();
+                bookstr = 'models2/pdf/' + books[5].url;
+                watchingBookId = books[5].bookId;
+            }
+            if (obj.name == "renwu") {
+                var onetask = [[${onetask}]];
+                if (onetask.iftask == "no") href = "/room?userId=" + [[${userId}]] + "&studioId=" + [[${studioId}]] + "&taskId=-1" + "&videoId=-1&bookId=-1";
+                else href = "/room?userId=" + [[${userId}]] + "&studioId=" + [[${studioId}]] + "&taskId=" + onetask.taskId + "&videoId=-1&bookId=-1";
+                window.location.href = href;
+            }
+            if (obj.name == "lianxi") {//做习题
+                //停止
+                window.speechSynthesis.cancel();
+                href = "/exercise?userId=" + [[${userId}]] + "&studioId=" + [[${studioId}]];
+                window.location.href = href;
+            }
+            if (obj.name == "shangfan") {
+                scene.remove(meshdianzishu1)
+                var geometry = new THREE.PlaneGeometry(67, 67);
+                // TextureLoader创建一个纹理加载器对象，可以加载图片作为几何体纹理
+                var textureLoader = new THREE.TextureLoader();
+                // 执行load方法，加载纹理贴图成功后，返回一个纹理对象Texture
+                textureLoader.load(bookstrnow + "/" + img_num + ".jpg", function (texture) {
+                    var material = new THREE.MeshLambertMaterial({
+
+                        map: texture,//设置颜色贴图属性值
+                    });
+                    var mesh = new THREE.Mesh(geometry, material); //网格模型对象Mesh
+                    mesh.position.y = 14.5;
+                    mesh.position.x = -10.5;
+                    mesh.position.z = 7;
+                    mesh.scale.set(0.2, 0.2, 0.2);
+                    scene.add(mesh); //网格模型添加到场景中
+                    meshdianzishu1 = mesh;
+
+                })
+                img_num--;
+            }
+            if (obj.name == "xiafan") {
+                scene.remove(meshdianzishu1)
+                var geometry = new THREE.PlaneGeometry(67, 67);
+                // TextureLoader创建一个纹理加载器对象，可以加载图片作为几何体纹理
+                var textureLoader = new THREE.TextureLoader();
+                // 执行load方法，加载纹理贴图成功后，返回一个纹理对象Texture
+                img_num++;
+                textureLoader.load(bookstrnow + "/" + img_num + ".jpg", function (texture) {
+                    var material = new THREE.MeshLambertMaterial({
+                        map: texture,//设置颜色贴图属性值
+                    });
+                    var mesh = new THREE.Mesh(geometry, material); //网格模型对象Mesh
+                    mesh.position.y = 14.5;
+                    mesh.position.x = -10.5;
+                    mesh.position.z = 7;
+                    mesh.scale.set(0.2, 0.2, 0.2);
+                    scene.add(mesh); //网格模型添加到场景中
+                    meshdianzishu1 = mesh;
+                })
+            }
+            if (obj.name == "houtui") {
+                scene.remove(meshvideo);
+                video.muted = true;
+                let time = video.currentTime
+                video = document.createElement('video');
+                video.src = strnow; // 设置视频地址
+                console.log(strnow);
+                video.currentTime = time + 30;
+                video.autoplay = "autoplay"; //要设置播放
+                if (sum >= 30) {
+                    quanjujindutiao.position.x += num * 30;
+                    sum = sum - 30;
+                }
+                var texture = new THREE.VideoTexture(video)
+                var geometry = new THREE.PlaneGeometry(125, 67);
+                var material = new THREE.MeshPhongMaterial({
+                    map: texture,
+                });
+                var mesh = new THREE.Mesh(geometry, material); //网格模型对象Mesh
+                mesh.position.y = 14.5;
+                mesh.position.x = -10.5;
+                mesh.position.z = 7;
+                mesh.scale.set(0.2, 0.2, 0.2);
+                scene.add(mesh); //网格模型添加到场景中
+                meshvideo = mesh;
+            }
+            if (obj.name == "qianjin") {
+                scene.remove(meshvideo);
+                video.muted = true;
+                let time = video.currentTime
+                video = document.createElement('video');
+                video.src = strnow; // 设置视频地址
+                console.log(strnow);
+                video.currentTime = time - 30;
+                video.autoplay = "autoplay"; //要设置播放
+                if (sum <= parseInt(alltime) - 30) {
+                    quanjujindutiao.position.x -= num * 30;
+                    sum = sum + 30;
+                }
+                var texture = new THREE.VideoTexture(video)
+                var geometry = new THREE.PlaneGeometry(125, 67);
+                var material = new THREE.MeshPhongMaterial({
+                    map: texture,
+                });
+                var mesh = new THREE.Mesh(geometry, material); //网格模型对象Mesh
+                mesh.position.y = 14.5;
+                mesh.position.x = -10.5;
+                mesh.position.z = 7;
+                mesh.scale.set(0.2, 0.2, 0.2);
+                scene.add(mesh); //网格模型添加到场景中
+                meshvideo = mesh;
+            }
+            if (obj.name == "pause") {
+                scene.remove(meshvideo);
+                video.muted = true;
+                let time = video.currentTime
+                video = document.createElement('video');
+                video.src = strnow; // 设置视频地址
+                video.currentTime = time;
+                console.log(strnow);
+                //video.autoplay = "autoplay"; //要设置播放
+                if (flag == 1) {
+                    flag++;
+                    clearInterval(shiping1);
+                } else {
+                    video.autoplay = "autoplay"; //要设置播放
+                    flag = 1;
+                    shiping1 = window.setInterval(function () {
+                        quanjujindutiao.position.x += num * 3 / 3;
+                        sum--;
+                        if (sum <= 0) {
+                            clearInterval(shiping1);
+                        }
+                    }, 1000);
+                }
+                var texture = new THREE.VideoTexture(video)
+                var geometry = new THREE.PlaneGeometry(125, 67);
+                var material = new THREE.MeshPhongMaterial({
+                    map: texture,
+                });
+                var mesh = new THREE.Mesh(geometry, material); //网格模型对象Mesh
+                mesh.position.y = 14.5;
+                mesh.position.x = -10.5;
+                mesh.position.z = 7;
+                mesh.scale.set(0.2, 0.2, 0.2);
+                scene.add(mesh); //网格模型添加到场景中
+                meshvideo = mesh;
+
+            }
+
+            if (bookstr != "#") {
+                var onProgress = function (xhr) {
+                    console.log(xhr)
+                    if (xhr.lengthComputable) {
+                        var percentComplete = xhr.loaded / xhr.total * 100;
+                        console.log(Math.round(percentComplete, 2) + '% downloaded');
+                    }
+                };
+                var onError = function (xhr) {
+                };
+                THREE.Loader.Handlers.add(/\.dds$/i, new THREE.DDSLoader());
+
+                bookstrnow = bookstr;
+                var geometry = new THREE.PlaneGeometry(67, 67);//125.67
+                var textureLoader = new THREE.TextureLoader();
+                textureLoader.load(bookstrnow + '/' + img_num + '.jpg', function (texture) {
+                    var material = new THREE.MeshLambertMaterial({
+                        map: texture,
+                    });
+                    var mesh = new THREE.Mesh(geometry, material);
+                    mesh.position.y = 14.5;
+                    mesh.position.x = -10.5;
+                    mesh.position.z = 7;
+                    mesh.scale.set(0.2, 0.2, 0.2);
+                    scene.add(mesh);
+                    meshdianzishu1 = mesh;
+                    camera.position.set(-16, 10, 35);
+                    controls.target = new THREE.Vector3(-16, 10, 0);
+                })
+                THREE.Loader.Handlers.add(/\.dds$/i, new THREE.DDSLoader());
+                //关闭按钮
+                var mtlLoader = new THREE.MTLLoader();
+                mtlLoader.setPath('models2/');
+                mtlLoader.load('x.mtl', function (materials) {
+                    materials.preload();
+                    var objLoader = new THREE.OBJLoader();
+                    objLoader.setMaterials(materials);
+                    objLoader.setPath('models2/');
+                    objLoader.load('x.obj', function (object) {
+                        object.name = "xdianzishu";
+                        object.position.y = -0.5;
+                        object.position.x = +7;
+                        object.scale.set(3, 3, 3);
+                        scene.add(object);
+                    }, onProgress, onError);
+
+                });
+
+                //上翻按钮
+                var mtlLoader = new THREE.MTLLoader();
+                mtlLoader.setPath('models2/');
+                mtlLoader.load('shangfan.mtl', function (materials) {
+
+                    materials.preload();
+
+                    var objLoader = new THREE.OBJLoader();
+                    objLoader.setMaterials(materials);
+                    objLoader.setPath('models2/');
+                    objLoader.load('shangfan.obj', function (object) {
+                        object.name = "shangfan";
+                        object.position.y = -0.5;
+                        object.position.x = +24;
+                        object.scale.set(3, 3, 3);
+                        quanjushangfan = object;
+                        scene.add(object);
+                    }, onProgress, onError);
+                });
+                //下翻按钮
+                var mtlLoader = new THREE.MTLLoader();
+                mtlLoader.setPath('models2/');
+                mtlLoader.load('xiafan.mtl', function (materials) {
+                    materials.preload();
+                    var objLoader = new THREE.OBJLoader();
+                    objLoader.setMaterials(materials);
+                    objLoader.setPath('models2/');
+                    objLoader.load('xiafan.obj', function (object) {
+                        object.name = "xiafan";
+                        object.position.y = -0.5;
+                        object.position.x = +24;
+                        object.scale.set(3, 3, 3);
+                        scene.add(object);
+                        quanjuxiafan = object
+                    }, onProgress, onError);
+                });
+            }
+
+
+            if (str != "#") {
+
+                var onProgress = function (xhr) {
+                    console.log(xhr)
+                    if (xhr.lengthComputable) {
+                        var percentComplete = xhr.loaded / xhr.total * 100;
+                        console.log(Math.round(percentComplete, 2) + '% downloaded');
+                    }
+                };
+                var onError = function (xhr) {
+                };
+                THREE.Loader.Handlers.add(/\.dds$/i, new THREE.DDSLoader());
+
+                var mtlLoader = new THREE.MTLLoader();
+                mtlLoader.setPath('models2/');
+                mtlLoader.load('x.mtl', function (materials) {
+                    materials.preload();
+                    var objLoader = new THREE.OBJLoader();
+                    objLoader.setMaterials(materials);
+                    objLoader.setPath('models2/');
+                    objLoader.load('x.obj', function (object) {
+                        object.name = "x";
+                        object.position.y = -0.5;
+                        object.scale.set(3, 3, 3);
+                        scene.add(object);
+
+                    }, onProgress, onError);
+
+                });
+                var mtlLoader = new THREE.MTLLoader();
+                mtlLoader.setPath('models2/');
+                mtlLoader.load('pause.mtl', function (materials) {
+
+                    materials.preload();
+
+                    var objLoader = new THREE.OBJLoader();
+                    objLoader.setMaterials(materials);
+                    objLoader.setPath('models2/');
+                    objLoader.load('pause.obj', function (object) {
+                        object.name = "pause";
+                        object.position.y = -0.5;
+                        object.scale.set(3, 3, 3);
+                        scene.add(object);
+                        quanjupause = object;
+                    }, onProgress, onError);
+
+                });
+                var mtlLoader = new THREE.MTLLoader();
+                mtlLoader.setPath('models2/');
+                mtlLoader.load('qianjin.mtl', function (materials) {
+
+                    materials.preload();
+
+                    var objLoader = new THREE.OBJLoader();
+                    objLoader.setMaterials(materials);
+                    objLoader.setPath('models2/');
+                    objLoader.load('qianjin.obj', function (object) {
+                        object.name = "qianjin";
+                        object.position.y = -0.5;
+                        object.scale.set(3, 3, 3);
+                        scene.add(object);
+                        quanjuqianjin = object;
+                    }, onProgress, onError);
+
+                });
+                var mtlLoader = new THREE.MTLLoader();
+                mtlLoader.setPath('models2/');
+                mtlLoader.load('houtui.mtl', function (materials) {
+                    materials.preload();
+                    var objLoader = new THREE.OBJLoader();
+                    objLoader.setMaterials(materials);
+                    objLoader.setPath('models2/');
+                    objLoader.load('houtui.obj', function (object) {
+                        object.name = "houtui";
+                        object.position.y = -0.5;
+                        object.scale.set(3, 3, 3);
+                        scene.add(object);
+                        quanjuhoutui = object;
+                    }, onProgress, onError);
+
+                });
+                var mtlLoader = new THREE.MTLLoader();
+                mtlLoader.setPath('models2/');
+                mtlLoader.load('jindu.mtl', function (materials) {
+                    materials.preload();
+                    var objLoader = new THREE.OBJLoader();
+                    objLoader.setMaterials(materials);
+                    objLoader.setPath('models2/');
+                    objLoader.load('jindu.obj', function (object) {
+                        object.name = "jindu";
+                        object.position.y = -0.5;
+                        object.scale.set(3, 3, 3);
+                        scene.add(object);
+                        quanjujindu = object;
+                        console.log(quanjujindu.width)
+                    }, onProgress, onError);
+
+                });
+                var mtlLoader = new THREE.MTLLoader();
+                mtlLoader.setPath('models2/');
+                mtlLoader.load('jindutiao.mtl', function (materials) {
+                    materials.preload();
+                    var objLoader = new THREE.OBJLoader();
+                    objLoader.setMaterials(materials);
+                    objLoader.setPath('models2/');
+                    objLoader.load('jindutiao.obj', function (object) {
+                        object.name = "jindutiao";
+                        object.position.y = -0.5;
+                        object.scale.set(3, 3, 3);
+                        scene.add(object);
+                        quanjujindutiao = object;
+                        video.oncanplay = function () {
+                            //sum,num,alltime设置全局变量为前进后退暂停
+                            alltime = video.duration;
+                            sum = parseInt(alltime);
+                            num = 3.8 / alltime;
+                            num = num.toFixed(4);
+                            shiping1 = window.setInterval(function () {
+                                object.position.x += num * 3 / 3;
+                                sum--;
+                                if (sum <= 0) {
+                                    clearInterval(shiping1);
+                                }
+                                console.log("")
+                            }, 1000);
+                            console.log("开始")
+                            console.log(alltime)
+                            console.log(num)
+                        }
+                    }, onProgress, onError);
+
+                });
+                strnow = str;
+                video = document.createElement('video');
+                video.src = str; // 设置视频地址
+                video.autoplay = "autoplay"; //要设置播放
+                // video对象作为VideoTexture参数创建纹理对象
+                var texture = new THREE.VideoTexture(video)
+                var geometry = new THREE.PlaneGeometry(125, 67);
+                var material = new THREE.MeshPhongMaterial({
+                    map: texture,
+                });
+                var mesh = new THREE.Mesh(geometry, material); //网格模型对象Mesh
+                mesh.position.y = 14.5;
+                mesh.position.x = -10.5;
+                mesh.position.z = 7;
+                mesh.scale.set(0.2, 0.2, 0.2);
+                scene.add(mesh); //网格模型添加到场景中
+                meshvideo = mesh;
+                camera.position.set(-16, 10, 35);
+                controls.target = new THREE.Vector3(-16, 10, 0);
+            }
+        }
+    }
+
+    function onMouseMove(event) {
+        var raycaster = new THREE.Raycaster();
+        var mouse = new THREE.Vector2();
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        raycaster.setFromCamera(mouse, camera);
+        var scensObjs = [];
+        scene.children.forEach(child => {
+            for (var i = 0; i < child.children.length; i++) {
+                var obj = child.children[i];
+                scensObjs.push(obj);
+
+            }
+        });
+        var intersects = raycaster.intersectObjects(scensObjs);
+        var intersect = intersects[0];
+        if (intersect.object instanceof THREE.Mesh) {
+            var obj = intersect.object.parent;
+            var videos = [[${videos}]];
+            len = videos.length;
+            if (obj.name == "book1" && len >= 1) {
+
+                var canvas = document.createElement("canvas");
+
+                canvas.width = 128;
+                canvas.height = 32;
+                var c = canvas.getContext('2d');
+// 矩形区域填充背景
+                c.fillStyle = "#3480C4";
+                c.fillRect(0, 0, 128, 32);
+// 文字
+                c.beginPath();
+                c.translate(64, 16);
+                c.fillStyle = "#000000"; //文本填充颜色
+                c.font = "bold 15px 宋体"; //字体样式设置
+                c.textBaseline = "middle"; //文本与fillText定义的纵坐标
+                c.textAlign = "center"; //文本居中(以fillText定义的横坐标)
+                var str = "";
+                str = videos[0].name;
+                c.fillText(str, 0, 0);
+                var texture = new THREE.CanvasTexture(canvas);
+//打印纹理对象的image属性
+// console.log(texture.image);
+//矩形平面
+                var geometry = new THREE.PlaneGeometry(18, 18);
+
+                var material = new THREE.MeshPhongMaterial({
+                    map: texture, // 设置纹理贴图
+                });
+// 创建一个矩形平面网模型，Canvas画布作为矩形网格模型的纹理贴图
+                var mesh2 = new THREE.Mesh(geometry, material);
+                mesh2.position.y = 10;
+                mesh2.position.x = 17;
+                mesh2.position.z = 13;
+                mesh2.scale.set(0.2, 0.2, 0.2);
+                scene.add(mesh2);
+                var mesh3 = mesh2;
+                setTimeout(function () {
+                    scene.remove(mesh3);
+                }, 100);
+                console.log("显示文本")
+                /*           instance2.add({
+                               parent: scene, //默认 任何一个object3d
+                               cssObject: THREE.CSS3DObject,
+                               name: 'css3d-1', // 唯一 注意是唯一哦
+                               element: `<div class="box2" id="box2">
+                   <div class="ys-block1">
+                       <div class="ys-con">
+                    ` + videos[0].name + `
+                       </div>
+                   </div>
+               </div>`,
+                               scale: [0.2, 0.2, 0.2],
+                               position: [10, 17,13],
+
+                           })*/
+            }
+
+
+            if (obj.name == "book2" && len >= 2) {
+                var canvas = document.createElement("canvas");
+                canvas.width = 128;
+                canvas.height = 32;
+                var c = canvas.getContext('2d');
+// 矩形区域填充背景
+                c.fillStyle = "#3480C4";
+                c.fillRect(0, 0, 128, 32);
+// 文字
+                c.beginPath();
+                c.translate(64, 16);
+                c.fillStyle = "#000000"; //文本填充颜色
+                c.font = "bold 15px 宋体"; //字体样式设置
+                c.textBaseline = "middle"; //文本与fillText定义的纵坐标
+                c.textAlign = "center"; //文本居中(以fillText定义的横坐标)
+                var str = "";
+                str = videos[1].name;
+                c.fillText(str, 0, 0);
+                var texture = new THREE.CanvasTexture(canvas);
+//打印纹理对象的image属性
+// console.log(texture.image);
+//矩形平面
+                var geometry = new THREE.PlaneGeometry(18, 18);
+
+                var material = new THREE.MeshPhongMaterial({
+                    map: texture, // 设置纹理贴图
+                });
+// 创建一个矩形平面网模型，Canvas画布作为矩形网格模型的纹理贴图
+                var mesh2 = new THREE.Mesh(geometry, material);
+                mesh2.position.y = 10;
+                mesh2.position.x = 20;
+                mesh2.position.z = 13;
+                mesh2.scale.set(0.2, 0.2, 0.2);
+                scene.add(mesh2);
+                var mesh3 = mesh2;
+                setTimeout(function () {
+                    scene.remove(mesh3);
+                }, 1000);//1s
+                console.log("显示文本")
+
+            }
+            if (obj.name == "book3" && len >= 3) {
+
+                var canvas = document.createElement("canvas");
+
+                canvas.width = 128;
+                canvas.height = 32;
+                var c = canvas.getContext('2d');
+// 矩形区域填充背景
+                c.fillStyle = "#3480C4";
+                c.fillRect(0, 0, 128, 32);
+// 文字
+                c.beginPath();
+                c.translate(64, 16);
+                c.fillStyle = "#000000"; //文本填充颜色
+                c.font = "bold 15px 宋体"; //字体样式设置
+                c.textBaseline = "middle"; //文本与fillText定义的纵坐标
+                c.textAlign = "center"; //文本居中(以fillText定义的横坐标)
+
+                var str = "";
+                str = videos[2].name;
+
+                c.fillText(str, 0, 0);
+
+                var texture = new THREE.CanvasTexture(canvas);
+//打印纹理对象的image属性
+// console.log(texture.image);
+//矩形平面
+                var geometry = new THREE.PlaneGeometry(18, 18);
+
+                var material = new THREE.MeshPhongMaterial({
+                    map: texture, // 设置纹理贴图
+                });
+// 创建一个矩形平面网模型，Canvas画布作为矩形网格模型的纹理贴图
+                var mesh2 = new THREE.Mesh(geometry, material);
+                mesh2.position.y = 10;
+                mesh2.position.x = 23;
+                mesh2.position.z = 13;
+                mesh2.scale.set(0.2, 0.2, 0.2);
+                scene.add(mesh2);
+                var mesh3 = mesh2;
+                setTimeout(function () {
+                    scene.remove(mesh3);
+                }, 1000);
+                console.log("显示文本")
+
+            }
+            if (obj.name == "book4" && len >= 4) {
+
+                var canvas = document.createElement("canvas");
+
+                canvas.width = 128;
+                canvas.height = 32;
+                var c = canvas.getContext('2d');
+// 矩形区域填充背景
+                c.fillStyle = "#3480C4";
+                c.fillRect(0, 0, 128, 32);
+// 文字
+                c.beginPath();
+                c.translate(64, 16);
+                c.fillStyle = "#000000"; //文本填充颜色
+                c.font = "bold 15px 宋体"; //字体样式设置
+                c.textBaseline = "middle"; //文本与fillText定义的纵坐标
+                c.textAlign = "center"; //文本居中(以fillText定义的横坐标)
+
+                var str = "";
+                str = videos[3].name;
+
+                c.fillText(str, 0, 0);
+
+                var texture = new THREE.CanvasTexture(canvas);
+//打印纹理对象的image属性
+// console.log(texture.image);
+//矩形平面
+                var geometry = new THREE.PlaneGeometry(18, 18);
+
+                var material = new THREE.MeshPhongMaterial({
+                    map: texture, // 设置纹理贴图
+                });
+// 创建一个矩形平面网模型，Canvas画布作为矩形网格模型的纹理贴图
+                var mesh2 = new THREE.Mesh(geometry, material);
+                mesh2.position.y = 10;
+                mesh2.position.x = 26;
+                mesh2.position.z = 13;
+                mesh2.scale.set(0.2, 0.2, 0.2);
+                scene.add(mesh2);
+                var mesh3 = mesh2;
+                setTimeout(function () {
+                    scene.remove(mesh3);
+                }, 1000);
+                console.log("显示文本")
+
+            }
+            if (obj.name == "book5" && len >= 5) {
+
+                var canvas = document.createElement("canvas");
+
+                canvas.width = 128;
+                canvas.height = 32;
+                var c = canvas.getContext('2d');
+// 矩形区域填充背景
+                c.fillStyle = "#3480C4";
+                c.fillRect(0, 0, 128, 32);
+// 文字
+                c.beginPath();
+                c.translate(64, 16);
+                c.fillStyle = "#000000"; //文本填充颜色
+                c.font = "bold 15px 宋体"; //字体样式设置
+                c.textBaseline = "middle"; //文本与fillText定义的纵坐标
+                c.textAlign = "center"; //文本居中(以fillText定义的横坐标)
+
+                var str = "";
+                str = videos[4].name;
+
+                c.fillText(str, 0, 0);
+
+                var texture = new THREE.CanvasTexture(canvas);
+//打印纹理对象的image属性
+// console.log(texture.image);
+//矩形平面
+                var geometry = new THREE.PlaneGeometry(18, 18);
+
+                var material = new THREE.MeshPhongMaterial({
+                    map: texture, // 设置纹理贴图
+                });
+// 创建一个矩形平面网模型，Canvas画布作为矩形网格模型的纹理贴图
+                var mesh2 = new THREE.Mesh(geometry, material);
+                mesh2.position.y = 7;
+                mesh2.position.x = 17;
+                mesh2.position.z = 13;
+                mesh2.scale.set(0.2, 0.2, 0.2);
+                scene.add(mesh2);
+                var mesh3 = mesh2;
+                setTimeout(function () {
+                    scene.remove(mesh3);
+                }, 1000);
+                console.log("显示文本")
+
+            }
+            if (obj.name == "book6" && len >= 6) {
+
+                var canvas = document.createElement("canvas");
+
+                canvas.width = 128;
+                canvas.height = 32;
+                var c = canvas.getContext('2d');
+// 矩形区域填充背景
+                c.fillStyle = "#3480C4";
+                c.fillRect(0, 0, 128, 32);
+// 文字
+                c.beginPath();
+                c.translate(64, 16);
+                c.fillStyle = "#000000"; //文本填充颜色
+                c.font = "bold 15px 宋体"; //字体样式设置
+                c.textBaseline = "middle"; //文本与fillText定义的纵坐标
+                c.textAlign = "center"; //文本居中(以fillText定义的横坐标)
+
+                var str = "";
+                str = videos[5].name;
+
+                c.fillText(str, 0, 0);
+
+                var texture = new THREE.CanvasTexture(canvas);
+//打印纹理对象的image属性
+// console.log(texture.image);
+//矩形平面
+                var geometry = new THREE.PlaneGeometry(18, 18);
+
+                var material = new THREE.MeshPhongMaterial({
+                    map: texture, // 设置纹理贴图
+                });
+// 创建一个矩形平面网模型，Canvas画布作为矩形网格模型的纹理贴图
+                var mesh2 = new THREE.Mesh(geometry, material);
+                mesh2.position.y = 7;
+                mesh2.position.x = 20;
+                mesh2.position.z = 13;
+                mesh2.scale.set(0.2, 0.2, 0.2);
+                scene.add(mesh2);
+                var mesh3 = mesh2;
+                setTimeout(function () {
+                    scene.remove(mesh3);
+                }, 1000);
+                console.log("显示文本")
+
+            }
+            if (obj.name == "book7" && len >= 7) {
+
+                var canvas = document.createElement("canvas");
+
+                canvas.width = 128;
+                canvas.height = 32;
+                var c = canvas.getContext('2d');
+// 矩形区域填充背景
+                c.fillStyle = "#3480C4";
+                c.fillRect(0, 0, 128, 32);
+// 文字
+                c.beginPath();
+                c.translate(64, 16);
+                c.fillStyle = "#000000"; //文本填充颜色
+                c.font = "bold 15px 宋体"; //字体样式设置
+                c.textBaseline = "middle"; //文本与fillText定义的纵坐标
+                c.textAlign = "center"; //文本居中(以fillText定义的横坐标)
+
+                var str = "";
+                str = videos[6].name;
+
+                c.fillText(str, 0, 0);
+
+                var texture = new THREE.CanvasTexture(canvas);
+//打印纹理对象的image属性
+// console.log(texture.image);
+//矩形平面
+                var geometry = new THREE.PlaneGeometry(18, 18);
+
+                var material = new THREE.MeshPhongMaterial({
+                    map: texture, // 设置纹理贴图
+                });
+// 创建一个矩形平面网模型，Canvas画布作为矩形网格模型的纹理贴图
+                var mesh2 = new THREE.Mesh(geometry, material);
+                mesh2.position.y = 7;
+                mesh2.position.x = 23;
+                mesh2.position.z = 13;
+                mesh2.scale.set(0.2, 0.2, 0.2);
+                scene.add(mesh2);
+                var mesh3 = mesh2;
+                setTimeout(function () {
+                    scene.remove(mesh3);
+                }, 1000);
+                console.log("显示文本")
+
+            }
+            if (obj.name == "book8" && len >= 8) {
+
+                var canvas = document.createElement("canvas");
+
+                canvas.width = 128;
+                canvas.height = 32;
+                var c = canvas.getContext('2d');
+// 矩形区域填充背景
+                c.fillStyle = "#3480C4";
+                c.fillRect(0, 0, 128, 32);
+// 文字
+                c.beginPath();
+                c.translate(64, 16);
+                c.fillStyle = "#000000"; //文本填充颜色
+                c.font = "bold 15px 宋体"; //字体样式设置
+                c.textBaseline = "middle"; //文本与fillText定义的纵坐标
+                c.textAlign = "center"; //文本居中(以fillText定义的横坐标)
+
+                var str = "";
+                str = videos[7].name;
+
+                c.fillText(str, 0, 0);
+
+                var texture = new THREE.CanvasTexture(canvas);
+//打印纹理对象的image属性
+// console.log(texture.image);
+//矩形平面
+                var geometry = new THREE.PlaneGeometry(18, 18);
+
+                var material = new THREE.MeshPhongMaterial({
+                    map: texture, // 设置纹理贴图
+                });
+// 创建一个矩形平面网模型，Canvas画布作为矩形网格模型的纹理贴图
+                var mesh2 = new THREE.Mesh(geometry, material);
+                mesh2.position.y = 7;
+                mesh2.position.x = 26;
+                mesh2.position.z = 13;
+                mesh2.scale.set(0.2, 0.2, 0.2);
+                scene.add(mesh2);
+                var mesh3 = mesh2;
+                setTimeout(function () {
+                    scene.remove(mesh3);
+                }, 1000);
+                console.log("显示文本")
+            }
+
+//             if (obj.name == "dianzishu1") {
+//                 var canvas = document.createElement("canvas");
+//
+//                 canvas.width = 128;
+//                 canvas.height = 32;
+//                 var c = canvas.getContext('2d');
+// // 矩形区域填充背景
+//                 c.fillStyle = "#3480C4";
+//                 c.fillRect(0, 0, 128, 32);
+// // 文字
+//                 c.beginPath();
+//                 c.translate(64, 16);
+//                 c.fillStyle = "#000000"; //文本填充颜色
+//                 c.font = "bold 20px 宋体"; //字体样式设置
+//                 c.textBaseline = "middle"; //文本与fillText定义的纵坐标
+//                 c.textAlign = "center"; //文本居中(以fillText定义的横坐标)
+//                 var str = "";
+//                 str = videos[7].name;
+//                 c.fillText(str, 0, 0);
+//                 var texture = new THREE.CanvasTexture(canvas);
+// //打印纹理对象的image属性
+// // console.log(texture.image);
+// //矩形平面
+//                 var geometry = new THREE.PlaneGeometry(18, 18);
+//
+//                 var material = new THREE.MeshPhongMaterial({
+//                     map: texture, // 设置纹理贴图
+//                 });
+// // 创建一个矩形平面网模型，Canvas画布作为矩形网格模型的纹理贴图
+//                 var mesh2 = new THREE.Mesh(geometry, material);
+//                 mesh2.position.y = 7;
+//                 mesh2.position.x = 26;
+//                 mesh2.position.z = 13;
+//                 mesh2.scale.set(0.2, 0.2, 0.2);
+//                 scene.add(mesh2);
+//                 var mesh3 = mesh2;
+//                 setTimeout(function () {
+//                     scene.remove(mesh3);
+//                 }, 1000);
+//                 console.log("显示文本")
+//             }
+
+            if (obj.name == "renwu") {
+
+                var sperksum = 0;
+                let canvas = document.getElementById('canvas')
+                let ctx = canvas.getContext('2d')
+                canvas.width = 300
+                canvas.height = 300
+                //制作矩形
+                ctx.fillStyle = "rgba(255,165,0,0.8)";
+                ctx.fillRect(0, 0, 300, 300)
+                //设置文字
+                ctx.fillStyle = "#fff";
+                //ctx.font = 'normal 13pt "楷体"' //
+                ctx.font = 'normal 13pt bold sans-serif'
+                ctx.fillText('', 100, 20)
+                var str = "";
+                str = str + "职务：辅导员         ";
+                var x = [[${finishTask}]];
+                str = str + x;
+                str = str + "点击辅导员领取下一个任务：";
+                var onetask = [[${onetask}]];
+                if (onetask.iftask == "no") str = str + "无(您暂时没有可领取的任务，请等待发布)";
+                else {
+                    str = str + onetask.taskname;
+                    str = str + " 难度：" + onetask.taskLevel + "级";
+                    str = str + " 情境：" + onetask.taskDetail;
+                }
+                str = str + [[${notFinishTask}]];
+                str = str + [[${lastTaskInformation}]];
+                if (renwushijian != str) {
+                    speak(str);
+                }
+                renwushijian = str;
+                let textWord = str;
+                //文字换行
+                let len = parseInt(textWord.length / 15)
+                for (let i = 0; i < (len + 1); i++) {
+                    let space = 15
+                    if (i === len) {
+                        space = textWord.length - len * 15
+                    }
+
+                    console.log('len+' + len, 'space+' + space)
+                    let word = textWord.substr(i * 15, space)
+                    ctx.fillText(word, 15, 25 * (i + 1))
+                }
+                //生成图片
+                let url = canvas.toDataURL('image/png');
+
+                //将图片构建到纹理中
+                let geometry1 = new THREE.PlaneGeometry(15, 15)
+                let texture = THREE.ImageUtils.loadTexture(url, null, function (t) {
+                })
+
+                let material1 = new THREE.MeshBasicMaterial({
+                    map: texture,
+                    side: THREE.DoubleSide,
+                    opacity: 1,
+                    transparent: true,
+                })
+
+                let rect = new THREE.Mesh(geometry1, material1)
+                rect.position.set(17, 15, -10)
+                scene.add(rect)
+            }
+        }
+    }
+
+
+    window.addEventListener('dblclick', onMouseClick, false);
+    window.addEventListener('mousemove', onMouseMove, false);
+
+
+    $(window).resize(function () {
+        css3DRenderer.setSize(el.offsetWidth, el.offsetHeight)
+
+    })
+    /*  ***********/
+    controls.autoRotate = false
+    app.render(() => {
+        TWEEN.update()
+        controls.update(clock.getDelta())
+        renderer.render(scene, camera)
+        css3DRenderer.render(scene, camera)
+    })
+
+
+</script>
+</html>
+

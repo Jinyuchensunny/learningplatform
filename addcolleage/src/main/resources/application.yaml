@@ -1,0 +1,24 @@
+server:
+  port: 8092 # 服务提供方
+
+# 指定当前eureka客户端的注册地址,
+eureka:
+  client:
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:8092/eureka
+  instance:
+    hostname: localhost
+
+#当前服务名称
+spring:
+  thymeleaf:
+    prefix: classpath:/templates/
+    mode: HTML
+    cache: false
+    encoding: UTF-8
+    #     新版本不支持content-type: text/html，故新写法
+  application:
+    name: addcolleage
+  freemarker:
+    prefer-file-system-access: false
+

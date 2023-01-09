@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>管理员端</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="admin/images/favicon.ico"/>
+    <link rel="stylesheet" href="admin/css/backend-plugin.min.css">
+    <link rel="stylesheet" href="admin/css/backend.css?v=1.0.0">
+    <link rel="stylesheet" href="admin/vendor/@fortawesome/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="admin/vendor/line-awesome/dist/line-awesome/css/line-awesome.min.css">
+    <link rel="stylesheet" href="admin/vendor/remixicon/fonts/remixicon.css">
+    <link rel="stylesheet" href="admin/vendor/@icon/dripicons/dripicons.css">
+
+    <link rel='stylesheet' href='admin/vendor/fullcalendar/core/main.css'/>
+    <link rel='stylesheet' href='admin/vendor/fullcalendar/daygrid/main.css'/>
+    <link rel='stylesheet' href='admin/vendor/fullcalendar/timegrid/main.css'/>
+    <link rel='stylesheet' href='admin/vendor/fullcalendar/list/main.css'/>
+    <link rel="stylesheet" href="admin/vendor/mapbox/mapbox-gl.css">
+</head>
+<body class=" ">
+<!-- loader Start -->
+<div id="loading">
+    <div id="loading-center">
+    </div>
+</div>
+<!-- loader END -->
+<!-- Wrapper Start -->
+<div class="wrapper">
+
+    <div class="two-sidebar sidebar-1  sidebar-default ">
+        <div class="iq-sidebar-small">
+            <div class="sidebar-top">
+                <div class="iq-sidebar-small-logo">
+                    <a href="#">
+                        <img src="admin/images/logo.png" class="img-fluid" alt="logo">
+                    </a>
+                </div>
+            </div>
+            <div class="sidebar-bottom">
+                <div class="sidebar-menu-icon">
+                    <ul class="nav nav-pills list-inline m-0 p-0" id="icon-pills-tab" role="tablist">
+                        <li class="nav-item d-block">
+                            <a class="nav-link " data-toggle="pill" href="#project-pan" role="tab"
+                               aria-selected="false">
+                                <svg class="svg-icon" width="26" height="26" xmlns="http://www.w3.org/2000/svg"
+                                     viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"/>
+                                </svg>
+                            </a>
+                        </li>
+                        <li class="nav-item d-block">
+                            <a class="nav-link" data-toggle="pill" href="#droplets-pan" role="tab"
+                               aria-selected="false">
+                                <svg class="svg-icon" width="26" height="26" xmlns="http://www.w3.org/2000/svg"
+                                     viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                                    <path fill-rule="evenodd"
+                                          d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
+                                          clip-rule="evenodd"/>
+                                </svg>
+                            </a>
+                        </li>
+
+                        <li class="nav-item d-block">
+                            <a class="nav-link" data-toggle="pill" href="#account" role="tab" aria-selected="false">
+                                <svg class="svg-icon" width="26" height="26" xmlns="http://www.w3.org/2000/svg"
+                                     viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                          clip-rule="evenodd"/>
+                                </svg>
+                            </a>
+                        </li>
+                        <li class="nav-item d-block mb-0">
+                            <a class="nav-link active" data-toggle="pill" href="#other-pages" role="tab"
+                               aria-selected="false">
+                                <svg class="svg-icon active" width="26" height="26" xmlns="http://www.w3.org/2000/svg"
+                                     viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                          d="M2 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 002 2H4a2 2 0 01-2-2V5zm3 1h6v4H5V6zm6 6H5v2h6v-2z"
+                                          clip-rule="evenodd"/>
+                                    <path d="M15 7h1a2 2 0 012 2v5.5a1.5 1.5 0 01-3 0V7z"/>
+                                </svg>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="iq-sidebar">
+            <div class="data-scrollbar" data-scroll="1">
+                <nav class="iq-sidebar-menu">
+                    <div class="tab-content">
+                        <div class="tab-pane fade " id="project-pan" role="tabpanel">
+                            <div class="iq-sidebar-top">
+                                <div class="top-menu-icon">
+                                    <h4 class="text-uppercase">Web3d短视频学习平台</h4>
+                                </div>
+                            </div>
+
+                            <ul id="project" class="iq-menu list-inline m-0">
+                                <li class=" ">
+                                    <a th:href="@{/adminWelcome}">
+                                        <span>管理员端主页</span>
+                                    </a>
+                                </li>
+                                <li class=" ">
+                                    <a th:href="@{/adminGuide}">
+                                        <span>操作指南</span>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </div>
+                        <div class="tab-pane fade " id="droplets-pan" role="tabpanel">
+                            <div class="iq-sidebar-top">
+                                <div class="top-menu-icon">
+                                    <h4 class="text-uppercase">信息收集与发布</h4>
+                                </div>
+                            </div>
+                            <ul id="droplets" class="iq-menu list-inline m-0">
+                                <li class="">
+                                    <a th:href="@{/adminMessage}">
+                                        <span>查看留言</span>
+                                    </a>
+                                </li>
+                                <li class=" ">
+                                    <a th:href="@{/adminPublishInfo}">
+                                        <span>发布资讯</span>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </div>
+                        <div class="tab-pane fade" id="discover" role="tabpanel">
+
+                        </div>
+                        <div class="tab-pane fade" id="account" role="tabpanel">
+                            <div class="iq-sidebar-top">
+                                <div class="top-menu-icon">
+                                    <h4 class="text-uppercase">账号管理</h4>
+                                </div>
+                            </div>
+                            <ul id="accounts" class="iq-menu list-inline m-0">
+                                <li class=" ">
+                                    <a id="id-team" th:href="@{/adminAllUser}" data-extra-toggle="tab"
+                                       data-target="#team">
+                                        <span>跟踪用户学习状况</span>
+                                    </a>
+                                </li>
+                                <li class=" ">
+                                    <a href="#te" class="collapsed" data-toggle="collapse" aria-expanded="false">
+                                        <span>管理用户</span>
+                                        <i class="las la-angle-right iq-arrow-right arrow-active"></i>
+                                        <i class="las la-angle-down iq-arrow-right arrow-hover"></i>
+                                    </a>
+                                    <ul id="te" class="iq-submenu collapse" data-parent="#otherpage">
+                                        <li class="">
+                                            <a th:href="@{/adminDelStudent}">
+                                                <span>修改用户账号状态</span>
+                                            </a>
+                                        </li>
+                                        <li class="">
+                                            <a th:href="@{/adminUpdateStuInfo}">
+                                                <span>修改用户信息</span>
+                                            </a>
+                                        </li>
+                                        <li class="">
+                                            <a th:href="@{/adminUpdateUserPer}">
+                                                <span>修改用户权限</span>
+                                            </a>
+                                        </li>
+                                        <li class="">
+                                            <a th:href="@{/adminAllUsers}">
+                                                <span>查看用户基本信息</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                            </ul>
+                        </div>
+                        <div class="tab-pane fade active show" id="other-pages" role="tabpanel">
+                            <div class="iq-sidebar-top">
+                                <div class="top-menu-icon">
+                                    <h4 class="text-uppercase">任务相关</h4>
+                                </div>
+                            </div>
+                            <ul id="otherpage" class="iq-menu list-inline m-0">
+                                <li class=" active">
+                                    <a href="#user" class="collapsed" data-toggle="collapse" aria-expanded="false">
+                                        <span>发布</span>
+                                        <i class="las la-angle-right iq-arrow-right arrow-active"></i>
+                                        <i class="las la-angle-down iq-arrow-right arrow-hover"></i>
+                                    </a>
+                                    <ul id="user" class="iq-submenu collapse" data-parent="#otherpage">
+                                        <li class="">
+                                            <a th:href="@{/adminPublishTask}">
+                                                <span>任务</span>
+                                            </a>
+                                        </li>
+                                        <li class="active">
+                                            <a th:href="@{/adminPublishExercise}">
+                                                <span>习题</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li class=" ">
+                                    <a href="#auth" class="collapsed" data-toggle="collapse" aria-expanded="false">
+                                        <span>增加</span>
+                                        <i class="las la-angle-right iq-arrow-right arrow-active"></i>
+                                        <i class="las la-angle-down iq-arrow-right arrow-hover"></i>
+                                    </a>
+                                    <ul id="auth" class="iq-submenu collapse" data-parent="#otherpage">
+                                        <li class="">
+                                            <a th:href="@{/adminAddColleage}">
+                                                <span>学院</span>
+                                            </a>
+                                        </li>
+                                        <li class="">
+                                            <a th:href="@{/adminAddStudio}">
+                                                <span>工作室</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li class=" ">
+                                    <a href="#ui" class="collapsed" data-toggle="collapse" aria-expanded="false">
+                                        <span>查看</span>
+                                        <i class="las la-angle-right iq-arrow-right arrow-active"></i>
+                                        <i class="las la-angle-down iq-arrow-right arrow-hover"></i>
+                                    </a>
+                                    <ul id="ui" class="iq-submenu collapse" data-parent="#otherpage">
+                                        <li class="">
+                                            <a th:href="@{/adminAllTask}">
+                                                <span>任务</span>
+                                            </a>
+                                        </li>
+                                        <li class="">
+                                            <a th:href="@{/adminAllExercise}">
+                                                <span>习题</span>
+                                            </a>
+                                        </li>
+                                        <li class="">
+                                            <a th:href="@{/adminAllVedio}">
+                                                <span>视频</span>
+                                            </a>
+                                        </li>
+                                        <li class="">
+                                            <a th:href="@{/adminAllBook}">
+                                                <span>书籍</span>
+                                            </a>
+                                        </li>
+                                        <li class="">
+                                            <a th:href="@{/adminAllColleage}">
+                                                <span>学院</span>
+                                            </a>
+                                        </li>
+                                        <li class="">
+                                            <a th:href="@{/adminAllStudio}">
+                                                <span>工作室</span>
+                                            </a>
+                                        </li>
+
+                                    </ul>
+                                </li>
+
+
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+                <div class="p-3"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="iq-top-navbar">
+        <div class="iq-navbar-custom">
+            <nav class="navbar navbar-expand-lg navbar-light p-0">
+                <div class="iq-search-bar device-search">
+                    <form>
+                        <div class="input-prepend input-append">
+                            <div class="btn-group">
+                                <label class="dropdown-toggle searchbox" data-toggle="dropdown">
+                                    <input class="dropdown-toggle search-query text search-input" type="text"
+                                           placeholder="Type here to search..."><span class="search-replace"></span>
+                                    <a class="search-link" href="#"><i class="ri-search-line"></i></a>
+                                    <span class="caret"><!--icon--></span>
+                                </label>
+                                <ul class="dropdown-menu">
+                                    <li><a th:href="@{/introduction}">
+                                        <div class="item">平台介绍</div>
+                                    </a></li>
+                                    <li><a th:href="@{/questions}">
+                                        <div class="item">Q&A</div>
+                                    </a></li>
+                                    <li><a th:href="@{/toLogin}">
+                                        <div class="item">登录页面</div>
+                                    </a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="create-dropdown nav-icon dropdown mr-2">
+                    <a href="#" class="search-toggle dropdown-toggle btn btn-primary text-white add-btn"
+                       id="dropdownMenuButton002" data-toggle="dropdown" aria-haspopup="true"
+                       aria-expanded="false">
+                        search<i class="ri-arrow-down-s-line arrow pl-2"></i>
+                    </a>
+                    <div class="iq-sub-dropdown dropdown-menu" aria-labelledby="dropdownMenuButton002">
+                        <div class="card shadow-none m-0">
+                            <div class="card-body p-0">
+
+                                <a href="../backend/page-kubernetes.html" class="">
+                                    <div class="d-flex align-items-center p-3 border-bottom">
+                                        <div class="icon iq-icon-box-2 icon-text bg-body rounded">
+                                            I
+                                        </div>
+                                        <div>
+                                            <h6>主页</h6>
+                                            <p class="mb-0 text-body font-size-14">Create cloud server</p>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a href="../backend/page-apps.html" class="">
+                                    <div class="d-flex align-items-center p-3 border-bottom">
+                                        <div class="icon iq-icon-box-2 icon-text bg-body rounded">
+                                            Q
+                                        </div>
+                                        <div>
+                                            <h6>操作指南</h6>
+                                            <p class="mb-0 text-body font-size-14">Create cloud server</p>
+                                        </div>
+                                    </div>
+                                </a>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse"
+                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-label="Toggle navigation">
+                        <i class="ri-menu-3-line"></i>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav ml-auto navbar-list align-items-center">
+                            <li class="nav-item nav-icon icon-dropdown dropdown">
+                                <a href="#" class="search-toggle dropdown-toggle btn btn-primary text-white add-btn"
+                                   id="dropdownMenuButton02" data-toggle="dropdown" aria-haspopup="true"
+                                   aria-expanded="false">
+                                    前往<i class="ri-arrow-down-s-line arrow pl-2"></i>
+                                </a>
+                                <div class="iq-sub-dropdown dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                                    <div class="card shadow-none m-0">
+                                        <div class="card-body p-0">
+                                            <a th:href="@{/introduction}" class="">
+                                                <div class="d-flex align-items-center p-3 border-bottom">
+                                                    <div class="icon iq-icon-box-2 icon-text bg-body rounded">
+                                                        I
+                                                    </div>
+                                                    <div>
+                                                        <h6>平台介绍</h6>
+                                                        <p class="mb-0 text-body font-size-14">查看该平台介绍</p>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <a th:href="@{/questions}" class="">
+                                                <div class="d-flex align-items-center p-3 border-bottom">
+                                                    <div class="icon iq-icon-box-2 icon-text bg-body rounded">
+                                                        Q
+                                                    </div>
+                                                    <div>
+                                                        <h6>Q&A</h6>
+                                                        <p class="mb-0 text-body font-size-14">查看常见问题页</p>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <a th:href="@{/toLogin}" class="">
+                                                <div class="d-flex align-items-center p-3 border-bottom">
+                                                    <div class="icon iq-icon-box-2 icon-text bg-body rounded">
+                                                        L
+                                                    </div>
+                                                    <div>
+                                                        <h6>登录页面</h6>
+                                                        <p class="mb-0 text-body font-size-14">退出管理员端并前往登录页</p>
+                                                    </div>
+                                                </div>
+                                            </a>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="nav-item nav-icon search-content">
+                                <a href="#" class="search-toggle rounded" id="dropdownSearch" data-toggle="dropdown"
+                                   aria-haspopup="true" aria-expanded="false">
+                                    <i class="ri-search-line"></i>
+                                </a>
+                                <div class="iq-search-bar iq-sub-dropdown dropdown-menu"
+                                     aria-labelledby="dropdownSearch">
+                                    <form action="#" class="searchbox p-2">
+                                        <div class="form-group mb-0 position-relative">
+                                            <input type="text" class="text search-input font-size-12"
+                                                   placeholder="type here to search...">
+                                            <a href="#" class="search-link"><i class="las la-search"></i></a>
+                                        </div>
+                                    </form>
+                                </div>
+                            </li>
+                            <li class="nav-item nav-icon dropdown">
+                                <a href="#" class="search-toggle dropdown-toggle" id="dropdownMenuButton2"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                         height="24px" width="24px">
+                                        <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
+                                        <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
+                                    </svg>
+                                    <span class="bg-primary"></span>
+                                </a>
+
+                            </li>
+
+                            <li class="nav-item nav-icon dropdown caption-content pl-2 ml-2 border-left">
+                                <a href="#" class="search-toggle dropdown-toggle" id="dropdownMenuButton4"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <div class="d-flex align-items-center">
+                                        <img src="admin/images/user/1.png" class="img-fluid avatar-40 rounded"
+                                             alt="user">
+                                        <div class="caption ml-3">
+                                            <h6 class="mb-1">亲爱的管理员</h6>
+                                            <p class="text-body mb-0"><span class="__cf_email__"
+                                                                            data-cfemail="c9a2bba0babda0a789aea4a8a0a5e7aaa6a4">[email&#160;protected]</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <div class="modal fade" id="new-order" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="popup text-left">
+                        <h4 class="mb-3">New Order</h4>
+                        <div class="content create-workform bg-body">
+                            <div class="pb-3">
+                                <label class="mb-2">Email</label>
+                                <input type="text" class="form-control" placeholder="Enter Name or Email">
+                            </div>
+                            <div class="col-lg-12 mt-4">
+                                <div class="d-flex flex-wrap align-items-ceter justify-content-center">
+                                    <div class="btn btn-primary mr-4" data-dismiss="modal">Cancel</div>
+                                    <div class="btn btn-outline-primary" data-dismiss="modal">Create</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content-page">
+        <div class="container-fluid">
+            <div class="col-lg-12">
+                <div class="d-flex flex-wrap flex-wrap align-items-center justify-content-between mb-4">
+                    <div>
+                        <h3 class="mb-2">发布结果</h3>
+                        <p class="mb-0" th:text="${result}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Wrapper End-->
+<footer class="iq-footer">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6">
+                <ul class="list-inline mb-0">
+                    <li class="list-inline-item"><a th:href="@{/introduction}">平台介绍</a></li>
+                    <li class="list-inline-item"><a th:href="@{/questions}">常见问题</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-6 text-right">
+                <span class="mr-1"><script>document.write(new Date().getFullYear())</script>©</span> <a href="#"
+                                                                                                        class="">Web3d短视频学习平台</a>.
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- Backend Bundle JavaScript -->
+<script src="admin/js/backend-bundle.min.js"></script>
+
+<!-- Flextree Javascript-->
+<script src="admin/js/flex-tree.min.js"></script>
+<script src="admin/js/tree.js"></script>
+
+<!-- Table Treeview JavaScript -->
+<script src="admin/js/table-treeview.js"></script>
+
+<!-- Masonary Gallery Javascript -->
+<script src="admin/js/masonry.pkgd.min.js"></script>
+<script src="admin/js/imagesloaded.pkgd.min.js"></script>
+
+<!-- Mapbox Javascript -->
+<script src="admin/js/mapbox-gl.js"></script>
+<script src="admin/js/mapbox.js"></script>
+
+<!-- Fullcalender Javascript -->
+<script src='admin/vendor/fullcalendar/core/main.js'></script>
+<script src='admin/vendor/fullcalendar/daygrid/main.js'></script>
+<script src='admin/vendor/fullcalendar/timegrid/main.js'></script>
+<script src='admin/vendor/fullcalendar/list/main.js'></script>
+
+<!-- SweetAlert JavaScript -->
+<script src="admin/js/sweetalert.js"></script>
+
+<!-- Vectoe Map JavaScript -->
+<script src="admin/js/vector-map-custom.js"></script>
+
+<!-- Chart Custom JavaScript -->
+<script src="admin/js/customizer.js"></script>
+
+<!-- Chart Custom JavaScript -->
+<script src="admin/js/chart-custom.js"></script>
+
+<!-- slider JavaScript -->
+<script src="admin/js/slider.js"></script>
+
+<!-- app JavaScript -->
+<script src="admin/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="referrer" content="no-referrer"/>
+    <title>Title</title>
+</head>
+<body>
+    <h1>学习任务如下：</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>课程封面</th>
+            <th>课程名称</th>
+            <th>学习人数</th>
+            <th>习题数量</th>
+            <th>点击前往学习</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="video:${videos}">
+            <td >
+                <img th:src="@{../static/image/book.PNG}" width="50" height="40"/>
+            </td>
+            <td th:text="${video.getName()}"></td>
+            <td th:text="kkk"></td>
+            <td th:text="kkk"></td>
+            <td >
+                <a th:href="@{/watchVideo?userId=}+${userId}+@{&videoId=}+${video.getVideoId()}">前往学习</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</body>
+</html>

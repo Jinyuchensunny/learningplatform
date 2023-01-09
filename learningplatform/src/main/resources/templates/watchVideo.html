@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset=UTF-8>
+    <title>学习</title>
+</head>
+<body>
+<video name="media" id="video" preload="auto" width="800" height="600" >
+    <source th:src="@{/videos/}+${video.getUrl()}" type="video/mp4">
+    <source th:src="@{/videos/}+${video.getUrl()}" type="video/webm">
+    <source th:src="@{/videos/}+${video.getUrl()}" type="video/ogg">
+    您的浏览器暂不支持视频播放
+</video>
+<h1>习题如下：</h1>
+<table>
+
+    <tbody>
+    <tr th:each="exercise:${exercises}">
+        <p th:text="${exercise.getContent()}"></p>
+    </tr>
+
+
+</table>
+<a th:href="@{/room?userId=}+${userId}+@{&studioId=}+${video.getStudioId()}">
+    <button >返回工作室</button>
+</a>
+<a th:href="@{/watchFinished?userId=}+${userId}+@{&videoId=}+${video.getVideoId()}">
+    <button >已完成学习</button>
+</a>
+
+</body>
+</html>
